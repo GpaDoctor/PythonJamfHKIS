@@ -17,7 +17,9 @@ For Windows, type the following in terminal
 set JPS_USERNAME=yourUsername
 set JPS_PASSWORD=yourPassword
 
-run the class.py and you are good to go
+run the UpdateJemf.py and you are good to go
+
+*INCASE unable to refresh authentication. Restart VS Code completely and retype the authentication.
 
 
 
