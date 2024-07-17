@@ -2,6 +2,7 @@ from my_module import *
 
 def Execute(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
 
+	# Connect to Jemf
 	with Classic(JPS_URL, JPS_USERNAME,JPS_PASSWORD) as classic:
 		# Declare variables
 		#information has to be filled in first before runnning the below code. Please fill in *
@@ -11,7 +12,6 @@ def Execute(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
 		SerialNumber = "FVFCW0Z4P3YV"			# *
 		ComputerName = "This is amazinggggggg"	# *
 		LocationInformation =["full_name","email", "phone_number", "position" ]
-
 
 		# The following is all for testing
 

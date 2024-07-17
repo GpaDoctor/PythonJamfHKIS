@@ -6,7 +6,8 @@ Install the following applications
 Assume installed: Python3, git, VS Code is recommended
 - pip3 install jps-api-wrapper       jps-api-wrapper       
 - pip3 install lxml                  for xml files
-- pip3 install pandas
+- pip3 install pandas                for csv files
+-pip3 install openpyxl               for xlsx files
 
 For mac, type the following in terminal
 setopt HIST_IGNORE_SPACE
@@ -17,9 +18,13 @@ For Windows, type the following in terminal
 set JPS_USERNAME=yourUsername
 set JPS_PASSWORD=yourPassword
 
-run the UpdateJemf.py and you are good to go
+specify the path in getdata.py
 
-*INCASE unable to refresh authentication. Restart VS Code completely and retype the authentication.
+run the main.py and you are good to go
+
+*Remarks
+- INCASE unable to refresh authentication. Restart VS Code completely and retype the authentication.
+- INCASE import does not work. Click the bottom right hand corner Python 3.12.4 64-bit. Choose Global, then choose back Recommened.
 
 
 
