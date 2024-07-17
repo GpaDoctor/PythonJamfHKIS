@@ -1,10 +1,5 @@
 
 
-import UpdateJemf
-
-
-UpdateJemf.JemfUpdateExecute()
-
 
 
 

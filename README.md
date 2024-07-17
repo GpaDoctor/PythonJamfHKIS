@@ -6,6 +6,7 @@ Install the following applications
 Assume installed: Python3, git, VS Code is recommended
 - pip3 install jps-api-wrapper       jps-api-wrapper       
 - pip3 install lxml                  for xml files
+- pip3 install pandas
 
 For mac, type the following in terminal
 setopt HIST_IGNORE_SPACE
