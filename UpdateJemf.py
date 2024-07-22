@@ -95,31 +95,62 @@ def Execute(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
 			print("\n")
 			time.sleep(1)
 
-			print("Updating Computer User and Location")
-			# Update Computer User and Location
-			classic.update_computer(
-				f"""
-				<computer>
-					<general/>
-					<location>
-						<username>{UserName}</username>
-						<realname>{UserInformation[0]}</realname>
-						<real_name/>
-						<email_address>{UserInformation[1]}</email_address>
-						<position>{UserInformation[3]}</position>
-						<phone/>
-						<phone_number>{UserInformation[2]}</phone_number>
-						<department>{UserInformation[4]}</department>
-						<building>{UserInformation[5]}</building>
-						<room>{UserInformation[6]}</room>
-					</location>
-				</computer>
-				""",													#same as before xml file in f string, {} to declare a variable
-				serialnumber=SerialNumber
-			)
+			UserInformation = [saxutils.escape(info) for info in UserInformation]	#this is to escape the & symbol in the string
+			print(UserInformation)
+
+
+			if UserInformation[4] == "High School Chinese Studies &amp; World Languages":		#this was added because the server did not have the option, the resolution would be to ignore it
+				classic.update_computer(
+					f"""
+					<computer>
+						<general/>
+						<location>
+							<username>{UserName}</username>
+							<realname>{UserInformation[0]}</realname>
+							<real_name/>
+							<email_address>{UserInformation[1]}</email_address>
+							<position>{UserInformation[3]}</position>
+							<phone/>
+							<phone_number>{UserInformation[2]}</phone_number>
+							<building>{UserInformation[5]}</building>
+							<room>{UserInformation[6]}</room>
+
+						</location>
+					</computer>
+					""",													#same as before xml file in f string, {} to declare a variable
+					serialnumber=SerialNumber
+				)
+			else:
+				# Update Computer User and Location
+				classic.update_computer(
+					f"""
+					<computer>
+						<general/>
+						<location>
+							<username>{UserName}</username>
+							<realname>{UserInformation[0]}</realname>
+							<real_name/>
+							<email_address>{UserInformation[1]}</email_address>
+							<position>{UserInformation[3]}</position>
+							<phone/>
+							<phone_number>{UserInformation[2]}</phone_number>
+							<department>{UserInformation[4]}</department>
+							<building>{UserInformation[5]}</building>
+							<room>{UserInformation[6]}</room>
+
+						</location>
+					</computer>
+					""",													#same as before xml file in f string, {} to declare a variable
+					serialnumber=SerialNumber
+				)
 
 			print("Computer User and Location has been updated.")
-			test = input("Press Enter to Continue")
+			UserInformation.clear()
+			# test = input("Press Enter to Continue")
+
+
+
+
 	
 
 
