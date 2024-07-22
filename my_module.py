@@ -1,3 +1,5 @@
+# This file contains all imports that are used in the project
+
 from os import environ
 from jps_api_wrapper.classic import Classic
 from pprint import pprint
@@ -9,5 +11,9 @@ import xml.etree.ElementTree as ET
 import pandas as pd
 import openpyxl
 
-import UpdateJemf
+import shared
 import getdata
+import UpdateJemf
+
+
+

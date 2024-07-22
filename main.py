@@ -4,4 +4,10 @@ JPS_URL = "https://jss.hkis.edu.hk:8443/"
 JPS_USERNAME = environ.get("JPS_USERNAME")
 JPS_PASSWORD = environ.get("JPS_PASSWORD")
 
+xlsx_file_path = '/Users/lawerance/repo/Book.xlsx'
+
+#Run the script
+#Get data from excel
+shared.excel_data = getdata.get_data_from_xlsx(xlsx_file_path)
+
 UpdateJemf.Execute(JPS_URL, JPS_USERNAME,JPS_PASSWORD)
