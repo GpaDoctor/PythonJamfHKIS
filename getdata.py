@@ -1,8 +1,8 @@
 from my_module import *
 
 def get_data_from_xlsx(file_path):
-    data_list = []
-    df = pd.read_excel(file_path, sheet_name='Sheet2', usecols='B,K,N,Q', skiprows=1,header=None)
+    data_list = []                                              
+    df = pd.read_excel(file_path, sheet_name='Sheet1', usecols='A,B,E,F,K,L,N,P,Q', skiprows=1,header=None)
     for index, row in df.iterrows():
         data_list.append(row.tolist())
         
@@ -14,14 +14,5 @@ def get_data_from_xlsx(file_path):
 #     data = get_data_from_xlsx(xlsx_file_path)
 #     # print(data)
 
-    # UserName = []
-    # Department = []
-    # Building = []
-    # Room = []
-
-    # for i in data:
-    #     UserName.append(i[0])
-    #     Department.append(i[1])
-    #     Building.append(i[2])
-    #     Room.append(i[3])
-    # print(UserName, Department, Building, Room)
+#     for i in data:
+#         print(i)

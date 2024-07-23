@@ -2,3 +2,11 @@
 
 #Shared Variables
 excel_data = []
+
+
+# error varaibles
+# missing_people = []
+missing_computers = []
+
+#error in updating
+error_in_updating = []

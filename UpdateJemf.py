@@ -15,10 +15,10 @@ def Execute(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
 			UserInformation = []
 
 			# UserName is i[0] in the excel file
-			UserName = i[0]					# *
+			# UserName = i[0]					# *
 			SerialNumber = "FVFCW0Z4P3YV"	# *
 			# ComputerName = "This is amazinggggggg"	# *
-			LocationInformation =["full_name","email", "phone_number", "position", "Department", "Building", "Room" ]
+			LocationInformation = ["Email Address", "Username", "Preferred", "Surname", "Department", "Business Title", "Campus", "Telephone", "Room"]
 
 			# Assign variables
 			
@@ -50,29 +50,47 @@ def Execute(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
 
 
 			#Get information of the device
-			DeviceNeedUpdating = classic.get_computer(serialnumber=SerialNumber)
+			try:
+				DeviceNeedUpdating = classic.get_computer(serialnumber=SerialNumber)
+			except Exception as e:
+				print(f"Error retrieving device {SerialNumber}: {e}")
+				shared.missing_computers.append(SerialNumber)
+				continue
 
 			print("Device Information is shown below")
 			pprint(DeviceNeedUpdating['computer']["location"])			#use nested list to find the information needed
 			print("\n")
 
 
-			# To get user information from Jemf
-			GetUserInfo = classic.get_user(name=UserName, data_type="json")	#specify the file you want at the end, either json or xml
+			# # To get user information from Jemf
+			# try:
+			# 	GetUserInfo = classic.get_user(name=UserName, data_type="json")
+			# 	# Process GetUserInfo as it's successfully retrieved
+			# except Exception as e:  # Replace Exception with a more specific exception if possible
+			# 	# Handle the error, e.g., log it or append UserName to missing_people
+			# 	print(f"Error retrieving user {UserName}: {e}")
+			# 	shared.missing_people.append(UserName)
+			# 	continue
 
-			print("User Information is shown below")
-			for j_index, j_value in enumerate(LocationInformation[0:4]):
-				UserInformation.append(GetUserInfo['user'][j_value])			#use nested list to find what the information and append it to list
-				print(f"{j_value}: {UserInformation[-1]}")
-				#print the newly appened information
-			# print(UserInformation)
-			# exit()
-			for j_index, j_value in enumerate(LocationInformation[4:]):
-				UserInformation.append(i[j_index+1])
-				print(f"{LocationInformation[4+j_index]}: {UserInformation[-1]}")
+			# print("User Information is shown below")
+			# for j_index, j_value in enumerate(LocationInformation[0:4]):
+			# 	UserInformation.append(GetUserInfo['user'][j_value])			#use nested list to find what the information and append it to list
+			# 	print(f"{j_value}: {UserInformation[-1]}")
+			# 	#print the newly appened information
+			# # print(UserInformation)
+			# # exit()
+			# for j_index, j_value in enumerate(LocationInformation[4:]):
+			# 	UserInformation.append(i[j_index+1])
+			# 	print(f"{LocationInformation[4+j_index]}: {UserInformation[-1]}")
 			
-			# print(UserInformation)
-			# exit()
+			# # print(UserInformation)
+			# # exit()
+
+			# JUST GET THE DATA FROM THE EXCEL FILE AND UPDATE THE JEMF
+			for j_index, j_value in enumerate(LocationInformation):
+				UserInformation.append(str(i[j_index]))
+				print(f"{j_value}: {UserInformation[-1]}")
+			full_name = str(UserInformation[2]) + " " + str(UserInformation[3])
 
 
 			print("\n")
@@ -84,7 +102,7 @@ def Execute(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
 				f"""
 				<computer>
 					<general>
-					<name>{UserName} Computer</name>
+					<name>{full_name}'s Computer</name>
 					</general>
 				</computer>
 				""",													#Xml are in "" therefore use f string and use {} to include variables
@@ -95,60 +113,110 @@ def Execute(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
 			print("\n")
 			time.sleep(1)
 
-			UserInformation = [saxutils.escape(info) for info in UserInformation]	#this is to escape the & symbol in the string
-			print(UserInformation)
+			# Modify the UserInformation processing to print each info during the loop
+			for index, info in enumerate(UserInformation):
+				info_str = str(info)  # Convert info to string to prevent AttributeError
+				escaped_info = saxutils.escape(info_str)
+				UserInformation[index] = escaped_info
+				print(f"Escaped Info {index}: {escaped_info}")  # Print each escaped info
 
 
-			if UserInformation[4] == "High School Chinese Studies &amp; World Languages":		#this was added because the server did not have the option, the resolution would be to ignore it
+			try:
+				# Call the classic.update_computer function with the provided XML data and serial number
 				classic.update_computer(
 					f"""
 					<computer>
 						<general/>
 						<location>
-							<username>{UserName}</username>
-							<realname>{UserInformation[0]}</realname>
+							<username>{UserInformation[1]}</username>
+							<realname>{full_name}</realname>
 							<real_name/>
-							<email_address>{UserInformation[1]}</email_address>
-							<position>{UserInformation[3]}</position>
-							<phone/>
-							<phone_number>{UserInformation[2]}</phone_number>
-							<building>{UserInformation[5]}</building>
-							<room>{UserInformation[6]}</room>
-
-						</location>
-					</computer>
-					""",													#same as before xml file in f string, {} to declare a variable
-					serialnumber=SerialNumber
-				)
-			else:
-				# Update Computer User and Location
-				classic.update_computer(
-					f"""
-					<computer>
-						<general/>
-						<location>
-							<username>{UserName}</username>
-							<realname>{UserInformation[0]}</realname>
-							<real_name/>
-							<email_address>{UserInformation[1]}</email_address>
-							<position>{UserInformation[3]}</position>
-							<phone/>
-							<phone_number>{UserInformation[2]}</phone_number>
+							<email_address>{UserInformation[0]}</email_address>
+							<position>{UserInformation[5]}</position>
+							<phone>{UserInformation[7]}</phone>
 							<department>{UserInformation[4]}</department>
-							<building>{UserInformation[5]}</building>
-							<room>{UserInformation[6]}</room>
-
+							<building>{UserInformation[6]}</building>
+							<room>{UserInformation[8]}</room>
 						</location>
 					</computer>
-					""",													#same as before xml file in f string, {} to declare a variable
+					""",
 					serialnumber=SerialNumber
 				)
+			except Exception as e:
+				print(f"Failed to update everything: {e}")
+				shared.error_in_updating.append(UserInformation[1])
+				try:
+					# Second try: Attempt to update only the department
+					classic.update_computer(
+						f"""
+						<computer>
+							<general/>
+							<location>
+								<username>{UserInformation[1]}</username>
+								<realname>{full_name}</realname>
+								<real_name/>
+								<email_address>{UserInformation[0]}</email_address>
+								<position>{UserInformation[5]}</position>
+								<phone>{UserInformation[7]}</phone>
+								<phone_number>{UserInformation[7]}</phone_number>
+								<department>{UserInformation[4]}</department>
+								<building></building>
+								<room>{UserInformation[8]}</room>
+							</location>
+						</computer>
+						""",
+						serialnumber=SerialNumber
+					)
+				except Exception as e:
+					print(f"Failed to update department: {e}")
+					try:
+						# Third try: Attempt to update only the building
+						classic.update_computer(
+							f"""
+							<computer>
+								<general/>
+								<location>
+									<username>{UserInformation[1]}</username>
+									<realname>{full_name}</realname>
+									<real_name/>
+									<email_address>{UserInformation[0]}</email_address>
+									<position>{UserInformation[5]}</position>
+									<phone>{UserInformation[7]}</phone>
+									<department></department>
+									<building>{UserInformation[6]}</building>
+									<room>{UserInformation[8]}</room>
+								</location>
+							</computer>
+							""",
+							serialnumber=SerialNumber
+						)
+					except Exception as e:
+						print(f"Failed to update building: {e}")
+						# Final attempt: Update everything except department and building
+						classic.update_computer(
+							f"""
+							<computer>
+								<general/>
+								<location>
+									<username>{UserInformation[1]}</username>
+									<realname>{full_name}</realname>
+									<real_name/>
+									<email_address>{UserInformation[0]}</email_address>
+									<position>{UserInformation[5]}</position>
+									<phone>{UserInformation[7]}</phone>
+									<department></department>
+									<building></building>
+									<room>{UserInformation[8]}</room>
+								</location>
+							</computer>
+							""",
+							serialnumber=SerialNumber
+						)
+			# f = input("Press Enter to continue...")
 
-			print("Computer User and Location has been updated.")
-			UserInformation.clear()
-			# test = input("Press Enter to Continue")
-
-
+		print(f"Missing Computers in System: {shared.missing_computers}")
+		# print(f"Missing People in System: {shared.missing_people}")
+		print(f"There is a error when updating these people: {shared.error_in_updating}")
 
 
 	

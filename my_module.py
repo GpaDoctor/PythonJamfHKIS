@@ -2,6 +2,7 @@
 
 from os import environ
 from jps_api_wrapper.classic import Classic
+from jps_api_wrapper.pro import Pro
 from pprint import pprint
 import time
 import json
@@ -15,6 +16,6 @@ import xml.sax.saxutils as saxutils
 import shared
 import getdata
 import UpdateJemf
-
+import reset_computer
 
 
