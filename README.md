@@ -25,6 +25,13 @@ run the main.py and you are good to go
 *Remarks
 - INCASE unable to refresh authentication. Restart VS Code completely and retype the authentication.
 - INCASE import does not work. Click the bottom right hand corner Python 3.12.4 64-bit. Choose Global, then choose back Recommened.
+- Beware when using pro.py when a 405 error shows up
+        #For example: in the pro.create_mdm_command
+        # the endpoint actually have a problem. This has to be updated in the pro.py file
+        # command click on the pro.create_mdm_command to see the pro.py file
+        # change the endpoint to the desired endpoint in this case endpoint = "/api/preview/mdm/commands"
+        # save the pro.py file and run the script
+        # The management id can be found under the inventory, general, Jamf Pro Management ID: ...
 
 
 
@@ -34,3 +41,4 @@ source:
 - https://gitlab.com/cvtc/appleatcvtc/jps-api-wrapper/-/blob/main/README.md#retrieving-the-password-in-python-and-authenticating
 - https://jps-api-wrapper.readthedocs.io/en/stable/
 - https://developer.jamf.com/jamf-pro/reference/classic-api
+- https://jss.hkis.edu.hk:8443/api/doc/#/mdm/get_v1_mdm_commands
