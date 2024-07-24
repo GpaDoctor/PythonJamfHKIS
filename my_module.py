@@ -15,7 +15,7 @@ import xml.sax.saxutils as saxutils
 
 import shared
 import getdata
-import UpdateJemf
+import update_jamf
 import reset_computer
 
 
