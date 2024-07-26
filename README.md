@@ -56,6 +56,7 @@ source:
 
 # Return to service articles
 - https://www.youtube.com/watch?v=PyYp0pfxWCw # Youtube Guide
+- https://www.youtube.com/watch?v=uZcN3d4HSUk # Youtube Demo
 - https://support.apple.com/en-gb/guide/deployment/dep0a819891e/web # Return to service
 - https://learn.jamf.com/en-US/bundle/technical-articles/page/Return_to_Service.html # Return to service
 - https://www.youtube.com/watch?v=6M_1ruG6Pys   # Automated Device Enrollment
