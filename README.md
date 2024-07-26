@@ -53,3 +53,27 @@ source:
 - https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.10 # This is error message for reference
 - https://www.jamf.com/blog/howto-erase-all-content-and-settings-macos-redeployment/ #reference for erase device
 - https://community.jamf.com/t5/tech-thoughts/how-to-securely-manage-local-admin-passwords-with-jamf-pro-and/ba-p/289969 # for management id
+
+# Return to service articles
+- https://www.youtube.com/watch?v=PyYp0pfxWCw # Youtube Guide
+- https://support.apple.com/en-gb/guide/deployment/dep0a819891e/web # Return to service
+- https://learn.jamf.com/en-US/bundle/technical-articles/page/Return_to_Service.html # Return to service
+- https://www.youtube.com/watch?v=6M_1ruG6Pys   # Automated Device Enrollment
+- https://learn.jamf.com/en-US/bundle/jamf-pro-documentation-current/page/Automated_Device_Enrollment_Integration.html#:~:text=In%20Jamf%20Pro%2C%20click%20Settings,section%2C%20click%20Automated%20Device%20Enrollment%20. #Automated Device Enrollment
+
+Steps:
+1. Need to create a configuration profile in Jamf Pro
+2. Under COMPUTER, under Configuration Profile
+3. Click New
+4. In General, name it as return_to_service_wifi
+5. Under WIFI, type in the SSID aka the name of the WIFI
+6. Download the profile
+7. https://community.jamf.com/t5/jamf-pro/viewing-editing-casper-mobileconfig-files/m-p/35588       # Turn mobile.config to an xml readable format
+
+security cms -D -i return_to_service_wifi.mobileconfig | xmllint --pretty 1 - > return_to_service_wifi.xml
+
+8. https://www.base64encode.org/ # base64 encoding
+
+
+
+
