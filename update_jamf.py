@@ -16,7 +16,10 @@ def Execute(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
 
 			# UserName is i[0] in the excel file
 			# UserName = i[0]					# *
-			SerialNumber = "FVFCW0Z4P3YV"	# *
+			SerialNumber = i[-1]	# *
+			# print(i)
+			# print(f"Serial Number: {SerialNumber}")
+			# continue
 			# ComputerName = "This is amazinggggggg"	# *
 			LocationInformation = ["Email Address", "Username", "Preferred", "Surname", "Department", "Business Title", "Campus", "Telephone", "Room"]
 
@@ -212,11 +215,14 @@ def Execute(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
 							""",
 							serialnumber=SerialNumber
 						)
+			
 			# f = input("Press Enter to continue...")
 
 		print(f"Missing Computers in System: {shared.missing_computers}")
 		# print(f"Missing People in System: {shared.missing_people}")
 		print(f"There is a error when updating these people: {shared.error_in_updating}")
+
+		
 
 
 	

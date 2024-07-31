@@ -18,7 +18,7 @@ For Windows, type the following in terminal
 set JPS_USERNAME=yourUsername
 set JPS_PASSWORD=yourPassword
 
-specify the path in getdata.py
+specify the path in main.py
 
 run the main.py and you are good to go
 
@@ -59,8 +59,10 @@ source:
 - https://www.youtube.com/watch?v=uZcN3d4HSUk # Youtube Demo
 - https://support.apple.com/en-gb/guide/deployment/dep0a819891e/web # Return to service
 - https://learn.jamf.com/en-US/bundle/technical-articles/page/Return_to_Service.html # Return to service
+- https://s3.us-west-2.amazonaws.com/jamfse.io/Jamf+Return+to+Service+-+Guide.pdf # Retuen to service
 - https://www.youtube.com/watch?v=6M_1ruG6Pys   # Automated Device Enrollment
 - https://learn.jamf.com/en-US/bundle/jamf-pro-documentation-current/page/Automated_Device_Enrollment_Integration.html#:~:text=In%20Jamf%20Pro%2C%20click%20Settings,section%2C%20click%20Automated%20Device%20Enrollment%20. #Automated Device Enrollment
+- https://api-docs.kandji.io/#149ae2cc-fb7f-42ce-8379-187878685303 # return to service does not work on macos
 
 Steps:
 1. Need to create a configuration profile in Jamf Pro
