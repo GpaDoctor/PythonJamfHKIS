@@ -4,7 +4,7 @@ def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
 	# Connect to Jemf
 
         
-    with Pro(JPS_URL, JPS_USERNAME,JPS_PASSWORD) as pro:
+    with Classic(JPS_URL, JPS_USERNAME,JPS_PASSWORD) as classic:
         full_name_list =[]
         username_list = [] 
         serialnumber_list = []
@@ -19,72 +19,124 @@ def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
         username_array = str(username_array).strip("[]")
         serialnumber_array = str(serialnumber_array).strip("[]")
 
+    try:
+        classic.delete_script(name="local_user_account_creation")
+    except Exception as e:
+        print(f"Failed to delete script: {e}")
+        print("Creating a NEW one...")
+        
+    with Pro(JPS_URL, JPS_USERNAME,JPS_PASSWORD) as pro:
+        pro.create_script(
+            {
+                "name": "local_user_account_creation",
+                "info": "Create a local user account.",
+                "notes": "",
+                "priority": "AFTER",
+                "categoryId": "1",
+                "categoryName": "Developer Tools",
+                "parameter4": "1",
+                "parameter5": "2",
+                "parameter6": "3",
+                "parameter7": "4",
+                "parameter8": "5",
+                "parameter9": "6",
+                "parameter10": "7",
+                "parameter11": "8",
+                "osRequirements": "",
+                "scriptContents": 
+                """
+                #!/bin/bash
 
-        try:
-            pro.create_script(
-                {
-                    "name": "local_user_account_creation",
-                    "info": "Create a local user account.",
-                    "notes": "",
-                    "priority": "AFTER",
-                    "categoryId": "1",
-                    "categoryName": "Developer Tools",
-                    "parameter4": "1",
-                    "parameter5": "2",
-                    "parameter6": "3",
-                    "parameter7": "4",
-                    "parameter8": "5",
-                    "parameter9": "6",
-                    "parameter10": "7",
-                    "parameter11": "8",
-                    "osRequirements": "10.10.x",
-                    "scriptContents": 
-                    """
-                            #!/bin/bash
+                # Define an array of account names, full names, and serial numbers
+                account_names=(testing)
+                full_names=(test)
+                serial_numbers=(FVFCW108P3YV)
 
-                    # Define an array of account names, full names, and serial numbers
-                    account_names=(testing)
-                    full_names=(test)
-                    serial_numbers=(FVFCW108P3YV)
-
-                    # Loop through the array and create the user account on each computer
-                    for (( i=0; i<${#account_names[@]}; i++ )); do
-                        # Get the serial number of the computer
-                        actual_serial_number=$(system_profiler SPHardwareDataType | awk '/Serial/ {print $4}')
+                # Loop through the array and create the user account on each computer
+                for (( i=0; i<${#account_names[@]}; i++ )); do
+                    # Get the serial number of the computer
+                    actual_serial_number=$(system_profiler SPHardwareDataType | awk '/Serial/ {print $4}')
+                    
+                    # Check if the serial number of the computer matches the desired serial number
+                    if [ "$actual_serial_number" == "${serial_numbers[$i]}" ]; then
+                        # Set the default password for the user account
+                        default_password="Hkis1234"
                         
-                        # Check if the serial number of the computer matches the desired serial number
-                        if [ "$actual_serial_number" == "${serial_numbers[$i]}" ]; then
-                            # Set the default password for the user account
-                            default_password="Hkis1234"
-                            
-                            # Create the user account with the specified full name, account name, and default password
-                            sysadminctl -addUser "${account_names[$i]}" -fullName "${full_names[$i]}" -password "$default_password"
-                            
-                            # Add the user account to the admin group
-                            dseditgroup -o edit -a "${account_names[$i]}" -t user admin
-                            
-                            # Set the default user shell to bash
-                            dscl . -create /Users/"${account_names[$i]}" UserShell /bin/bash
-                            
-                            # Display a message indicating that the account has been created
-                            echo "User account created for serial number ${serial_numbers[$i]} with name ${computer_name[$i]}."
-                        else
-                            # Display a message indicating that the script did not run because the serial number did not match
-                            echo "This script is not intended to run on this computer."
-                        fi
-                        done
-                    """ 
-                                        
-                    }
-                )
-            # % (username_array, fullname_array, serialnumber_array)
-            print("Script created successfully.")
-        except Exception as e:
-            print(f"Failed to create script: {e}")
-            print("Plaese delete the original script in Jamf Pro")
+                        # Create the user account with the specified full name, account name, and default password
+                        sysadminctl -addUser "${account_names[$i]}" -fullName "${full_names[$i]}" -password "$default_password"
+                        
+                        # Add the user account to the admin group
+                        dseditgroup -o edit -a "${account_names[$i]}" -t user admin
+                        
+                        # Set the default user shell to bash
+                        dscl . -create /Users/"${account_names[$i]}" UserShell /bin/bash
+                        
+                        # Display a message indicating that the account has been created
+                        echo "User account created for serial number ${serial_numbers[$i]} with name ${computer_name[$i]}."
+                    else
+                        # Display a message indicating that the script did not run because the serial number did not match
+                        echo "This script is not intended to run on this computer."
+                    fi
+                    done
+                """ 
+                                    
+                }
+            )
+                    # % (username_array, fullname_array, serialnumber_array)
+
+    try:
+        classic.delete_policy(name="local_user_account_creation_trial")
+    except Exception as e:
+        print(f"Failed to delete policy: {e}")
+        print("Creating a NEW one...")
+
+    
+
+    classic.create_policy(
+        """
+        <policy>
+            <general>
+                <name>local_user_account_creation_trial</name>
+                <enabled>true</enabled>
+                <trigger>string</trigger>
+                <trigger_checkin>false</trigger_checkin>
+                <trigger_enrollment_complete>true</trigger_enrollment_complete>
+                <trigger_login>true</trigger_login>
+                <trigger_logout>false</trigger_logout>
+                <trigger_network_state_changed>false</trigger_network_state_changed>
+                <trigger_startup>true</trigger_startup>
+                <frequency>Ongoing</frequency>
+                <location_user_only>false</location_user_only>
+                <target_drive>/</target_drive>
+                <offline>false</offline>
+                <category>
+                    <id>-1</id>
+                    <name>Unknown</name>
+                </category>
+                <network_limitations>
+                    <minimum_network_connection>No Minimum</minimum_network_connection>
+                    <any_ip_address>true</any_ip_address>
+                </network_limitations>
+                <network_requirements>Any</network_requirements>
+                <site>
+                    <id>-1</id>
+                    <name>None</name>
+                </site>
+            </general>
+        </policy>
+        """, 0
+    )
+    x = classic.get_policy(name="local_user_account_creation_trial")
+
+    pprint(x)
+    with open('output.txt', 'w') as f:
+        f.write(str(x))
 
 
-        f = input("Add to script to the corresponding policy before pressing ENTER to continue...")
+
+
+    exit()
+    f = input("Press ENTER to continue...")
 
     with Classic(JPS_URL, JPS_USERNAME,JPS_PASSWORD) as classic:
 
@@ -192,7 +244,11 @@ def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
                             "clientData": [{ "managementId": management_id }]
                         }
                     )
+
+                    
                     break
+            
+                    
 
 
 

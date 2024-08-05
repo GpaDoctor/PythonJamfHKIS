@@ -22,7 +22,24 @@ specify the path in main.py
 
 run the main.py and you are good to go
 
-*Remarks
+* When executing reset_computer.py
+For a local user account to be created on the specified mac.
+In Jamf Pro, open seetings type script to located the script uploaded by the reset_computer.py.
+Create a policy under computer, under policies.
+Specify the Name, and under trigger select Startup, Login and enrollment complete. Under Execution Frequency select Once per computer.
+Under the scripts, click + located on the top right hand corner.
+Find the name of the script and add. (By cmd + f)
+In the scope, under target computer select a computer group or a specific computer.
+Under selected Deployment targets add the computer group or sepcific computer you want.
+Click Save on the bottom right hand corner.
+
+On the spcified computer,
+Open terminal.
+Type sudo jamf recon
+And in the console, find the jamf file to see what is going on.
+
+
+* Remarks
 - INCASE unable to refresh authentication. Restart VS Code completely and retype the authentication.
 - INCASE import does not work. Click the bottom right hand corner Python 3.12.4 64-bit. Choose Global, then choose back Recommened.
 - Beware of Captitalization. Especially in  with Pro(JPS_URL, JPS_USERNAME,JPS_PASSWORD) as pro: and with Classic(JPS_URL, JPS_USERNAME,JPS_PASSWORD) as classic:

@@ -10,7 +10,7 @@ def Execute(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
 
 		for i in shared.excel_data:
 			# Declare variables
-			#information has to be filled in first before runnning the below code. Please fill in *
+			# Information has to be filled in first before runnning the below code. Please fill in *
 			# The following information will later be drawn directly from a accdb file or a csv file for automation purposes
 			UserInformation = []
 
