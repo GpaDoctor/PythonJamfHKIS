@@ -2,7 +2,7 @@ from my_module import *
 
 def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
 	# Connect to Jemf
-
+    
         
     with Classic(JPS_URL, JPS_USERNAME,JPS_PASSWORD) as classic:
         full_name_list =[]
@@ -337,33 +337,24 @@ def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
 
     with Classic(JPS_URL, JPS_USERNAME,JPS_PASSWORD) as classic:
 
-        for i in shared.excel_data:
+        for i_index, i_value in enumerate(shared.excel_data):
 
-            SerialNumber = i[-1]	# *
+            SerialNumber = i_value[-1]	# *
             try:
                 for_the_managemenent_id = classic.get_computer(serialnumber=SerialNumber)['computer']['general']['id']
-                # x = classic.get_computer(serialnumber=SerialNumber)
-                # with open('output.txt', 'w') as f:
-                #     f.write(str(x))
-                # print(for_the_managemenent_id)
-
             except Exception as e:
                 print(f"Error retrieving device {SerialNumber}: {e}")
                 shared.missing_computers.append(SerialNumber)
-                # continue
-            # try:
-            #     x = classic.get_advanced_computer_search(id=12556)
-            #     with open('output.txt', 'w') as f:
-            #         f.write(str(x))
-
-            # except Exception as e:
-            #     print(f"Error retrieving device {SerialNumber}: {e}")
-            #     shared.missing_computers.append(SerialNumber)
-            #     # continue
-
-            
+                continue
 
             with Pro(JPS_URL, JPS_USERNAME,JPS_PASSWORD) as pro:
+                try:
+                    management_id =  pro.get_computer_inventory(for_the_managemenent_id)['general']['managementId']
+                    print(management_id)
+                except Exception as e:
+                    print(f"Error retrieving device {SerialNumber}: {e}")
+                    shared.missing_computers.append(SerialNumber)
+
                 # the endpoint actually have a problem. This has to be updated in the pro.py file
                 # command click on the pro.create_mdm_command to see the pro.py file
                 # change the endpoint to the desired endpoint in this case endpoint = "/api/preview/mdm/commands"
@@ -372,19 +363,19 @@ def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
                 # simply go to the corresponding api, fill in the parameters, in language click on Python copy the dictionary under payload = ...
                 # The management id can be found under the inventory, general, Jamf Pro Management ID: ...
 
-                # pro.create_mdm_command(
-                #     {
-                #     "commandData": {
-                #         "commandType": "SETTINGS",
-                #         "deviceName": "THIS IS ONE OF THE BEST DEVICES IN THE WORLD"
-                #     },
-                #     "clientData": [
-                #         {
-                #         "managementId": "4d7203c7-6043-4dae-8341-265768a15e5f"
-                #         }
-                #     ]
-                #     }
-                # )
+                pro.create_mdm_command(
+                    {
+                    "commandData": {
+                        "commandType": "SETTINGS",
+                        "deviceName": f"{full_name_list[i_index]}'s Happiest Mac In THE WORLD",
+                    },
+                    "clientData": [
+                        {
+                        "managementId": management_id
+                        }
+                    ]
+                    }
+                )
 
 
 
@@ -405,16 +396,7 @@ def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
                     #     }
                     # }
                     # )
-                
-
-
-                try:
-                    management_id =  pro.get_computer_inventory(for_the_managemenent_id)['general']['managementId']
-                    print(management_id)
-                except Exception as e:
-                    print(f"Error retrieving device {SerialNumber}: {e}")
-                    shared.missing_computers.append(SerialNumber)
-                    # continue
+    
 
                 pro.create_mdm_command(
                     {
@@ -429,7 +411,7 @@ def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
                     ]
                     }
                 )
-                exit()
+                continue
 
                 pro.create_mdm_command(
                                 {
