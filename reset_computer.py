@@ -20,6 +20,12 @@ def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
         serialnumber_array = str(serialnumber_array).strip("[]")
 
     try:
+        classic.delete_policy(name="local_user_account_creation_trial")
+    except Exception as e:
+        print(f"Failed to delete policy: {e}")
+        print("Ignore")
+
+    try:
         classic.delete_script(name="local_user_account_creation")
     except Exception as e:
         print(f"Failed to delete script: {e}")
@@ -78,25 +84,9 @@ def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
                         echo "This script is not intended to run on this computer."
                     fi
                     done
-                """ %(username_array, fullname_array, serialnumber_array)
-                                    
+                """ %(username_array, fullname_array, serialnumber_array)                                 
                 }
             )
-    #     x = classic.get_policy(name="testing_for_auto_setup",data_type="xml")
-    #     with open('output.txt', 'w') as f:
-    #         f.write(str(x))
-    # exit()
-
-    # x = classic.get_computer_group(name="intended_for_local_user_account_creation_trial")['computer_group']['id']
-
-    # print(x)
-    # exit()
-        
-    try:
-        classic.delete_policy(name="local_user_account_creation_trial")
-    except Exception as e:
-        print(f"Failed to delete policy: {e}")
-        print("Ignore")
 
     try:
         classic.delete_computer_group(name="intended_for_local_user_account_creation_trial")
@@ -119,9 +109,6 @@ def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
     )
 
     for i in shared.excel_data:
-        # x = classic.get_computer(serialnumber=i[-1])
-        # with open('output.txt', 'w') as f:
-        #     f.write(str(x))
         for_computer_group_id = classic.get_computer(serialnumber=i[-1])['computer']['general']['id']
         for_computer_group_name = classic.get_computer(serialnumber=i[-1])['computer']['general']['name']
         for_computer_group_mac_address = classic.get_computer(serialnumber=i[-1])['computer']['general']['mac_address']
@@ -148,7 +135,6 @@ def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
                 </computer_group>
                 """%(for_computer_group_id, for_computer_group_name, for_computer_group_mac_address, for_computer_group_alt_mac_address, for_computer_group_serial_number), name="intended_for_local_user_account_creation_trial"
                 )
-        
 
 
     try:
@@ -157,20 +143,23 @@ def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
         print(f"Failed to delete policy: {e}")
         print("Creating a NEW one...")
 
-    computer_id_list = []
-    computer_name_list = []
-    computer_udid_list = []
+    # computer_id_list = []
+    # computer_name_list = []
+    # computer_udid_list = []
     
-    for i in shared.excel_data:
-        computer_id_list.append(classic.get_computer(serialnumber=i[-1])['computer']['general']['id'])
-        computer_name_list.append(classic.get_computer(serialnumber=i[-1])['computer']['general']['name'])
-        computer_udid_list.append(classic.get_computer(serialnumber=i[-1])['computer']['general']['udid'])
-    print(computer_id_list)
-    print(computer_name_list)
-    print(computer_udid_list)
+    # for i in shared.excel_data:
+    #     computer_id_list.append(classic.get_computer(serialnumber=i[-1])['computer']['general']['id'])
+    #     computer_name_list.append(classic.get_computer(serialnumber=i[-1])['computer']['general']['name'])
+    #     computer_udid_list.append(classic.get_computer(serialnumber=i[-1])['computer']['general']['udid'])
+    # print(computer_id_list)
+    # print(computer_name_list)
+    # print(computer_udid_list)
     # exit()
 
-    classic.get_computer_group(name="intended_for_local_user_account_creation_trial")
+    script_id = classic.get_script(name="local_user_account_creation")['script']['id']
+
+    computer_group_id = classic.get_computer_group(name="intended_for_local_user_account_creation_trial")['computer_group']['id']
+    computer_group_name = classic.get_computer_group(name="intended_for_local_user_account_creation_trial")['computer_group']['name']
 
     classic.create_policy(
         """
@@ -227,7 +216,12 @@ def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
                 <scope>
                     <all_computers>false</all_computers>
                     <computers/>
-                    <computer_groups/>
+                    		<computer_groups>
+                                <computer_group>
+                                    <id>%d</id>
+                                    <name>%s</name>
+                                </computer_group>
+                            </computer_groups>
                     <buildings/>
                     <departments/>
                     <limit_to_users>
@@ -241,12 +235,6 @@ def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
                     </limitations>
                     <exclusions>
                         <computers/>
-                            <computer_groups>
-                                <computer_group>
-                                    <id>1637</id>
-                                    <name>intended_for_local_user_account_creation_trial</name>
-                                </computer_group>
-                            </computer_groups>
                         <buildings/>
                         <departments/>
                         <users/>
@@ -342,12 +330,10 @@ def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
                     <action>none</action>
                 </disk_encryption>
             </policy>
-        """%(computer_name_list, computer_udid_list, script_id), 0
+        """%(computer_group_id, computer_group_name, script_id), 0
     )
 
-    # exit()
-
-    # f = input("Press ENTER to continue...")
+    f = input("Press ENTER to continue...")
 
     with Classic(JPS_URL, JPS_USERNAME,JPS_PASSWORD) as classic:
 
