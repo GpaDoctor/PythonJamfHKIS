@@ -823,8 +823,6 @@ def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
             }
     )
 
-    
-
                 # pro.create_mdm_command(
                 #     {
                 #     "commandData": {
