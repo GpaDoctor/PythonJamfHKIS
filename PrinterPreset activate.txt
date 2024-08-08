@@ -1,0 +1,7 @@
+﻿#!/bin/sh
+
+#variable for storing the current users name
+currentuser=`stat -f "%Su" /dev/console`
+sudo -u $currentuser defaults import com.apple.print.custompresets /Users/$currentuser/Library/Preferences/com.apple.print.custompresets.plist
+echo "<result>$currentuser</result>"
+exit 0

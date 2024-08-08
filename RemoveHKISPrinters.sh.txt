@@ -1,0 +1,40 @@
+﻿#!/bin/bash
+
+
+	###############################################################
+	#	Copyright (c) 2017, D8 Services Ltd.  All rights reserved.  
+	#											
+	#	
+	#	THIS SOFTWARE IS PROVIDED BY D8 SERVICES LTD. "AS IS" AND ANY
+	#	EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+	#	WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+	#	DISCLAIMED. IN NO EVENT SHALL D8 SERVICES LTD. BE LIABLE FOR ANY
+	#	DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+	#	(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+	#	LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+	#	ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+	#	(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+	#	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+	#
+	#
+	###############################################################
+	#
+
+	echo "--Current printers"
+	lpstat -a | cut -d" " -f1 | while read PRTA
+	do
+	echo "-"$PRTA
+	done
+
+	lpstat -a | lpstat -a | cut -d" " -f1 | grep -i "hkis" | while read PRTB
+	do
+	echo "-- HKIS printer detected attempting to delete: "$PRTB
+	lpadmin -x $PRTB
+	sleep 1
+	done
+
+	echo "--Remaining printers"
+	lpstat -a | cut -d" " -f1 | while read PRTC
+	do
+	echo "-"$PRTC
+	done
