@@ -817,7 +817,7 @@ def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
                 },
                 "config": {
                     "updateAction": "DOWNLOAD_INSTALL",
-                    "versionType": "LATEST_MINOR",
+                    "versionType": "LATEST_ANY",
                     "specificVersion": "NO_SPECIFIC_VERSION"
                 }
             }
