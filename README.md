@@ -1,13 +1,13 @@
 # PythonJamfHKIS
 
-This is a new project using JEMF incooporating with Python using API to monitor and manipulate MACs.
+This is a new project using JAMF Pro incooporating with Python using API to monitor and manipulate MACs.
 
 Install the following applications
 Assume installed: Python3, git, VS Code is recommended
 - pip3 install jps-api-wrapper       jps-api-wrapper       
 - pip3 install lxml                  for xml files
 - pip3 install pandas                for csv files
-- pip3 install openpyxl               for xlsx files
+- pip3 install openpyxl              for xlsx files
 
 For mac, type the following in terminal
 setopt HIST_IGNORE_SPACE
@@ -18,28 +18,31 @@ For Windows, type the following in terminal
 set JPS_USERNAME=yourUsername
 set JPS_PASSWORD=yourPassword
 
-specify the path in main.py
-
-run the main.py and you are good to go
-
-* When executing reset_computer.py
-For a local user account to be created on the specified mac.
-In Jamf Pro, open seetings type script to located the script uploaded by the reset_computer.py.
-Create a policy under computer, under policies.
-Specify the Name, and under trigger select Startup, Login and enrollment complete. Under Execution Frequency select Once per computer.
-Under the scripts, click + located on the top right hand corner.
-Find the name of the script and add. (By cmd + f)
-In the scope, under target computer select a computer group or a specific computer.
-Under selected Deployment targets add the computer group or sepcific computer you want.
-Click Save on the bottom right hand corner.
-
-On the spcified computer,
-Open terminal.
-Type sudo jamf recon
-And in the console, find the jamf file to see what is going on.
+Fill in the .xlsx file from the web.
+Download the .xlsx file from the web. Use pwd in terminal to get the path of the file.
+Specify the path in main.py.                                    xlsx_file_path = the_path
+Change the endpoint in the pro.py file                          endpoint = "/api/preview/mdm/commands"
 
 
-* Remarks
+Run the main.py and you are good to go.
+
+# Remarks
+- When executing reset_computer.py
+        For a local user account to be created on the specified mac.
+        In Jamf Pro, open seetings type script to located the script uploaded by the reset_computer.py.
+        Create a policy under computer, under policies.
+        Specify the Name, and under trigger select Startup, Login and enrollment complete. Under Execution Frequency select Once per computer.
+        Under the scripts, click + located on the top right hand corner.
+        Find the name of the script and add. (By cmd + f)
+        In the scope, under target computer select a computer group or a specific computer.
+        Under selected Deployment targets add the computer group or sepcific computer you want.
+        Click Save on the bottom right hand corner.
+
+        On the spcified computer,
+        Open terminal.
+        Type sudo jamf recon
+        And in the console, find the jamf file to see what is going on.
+
 - INCASE unable to refresh authentication. Restart VS Code completely and retype the authentication.
 - INCASE import does not work. Click the bottom right hand corner Python 3.12.4 64-bit. Choose Global, then choose back Recommened.
 - Beware of Captitalization. Especially in  with Pro(JPS_URL, JPS_USERNAME,JPS_PASSWORD) as pro: and with Classic(JPS_URL, JPS_USERNAME,JPS_PASSWORD) as classic:
@@ -50,7 +53,7 @@ And in the console, find the jamf file to see what is going on.
         # change the endpoint to the desired endpoint in this case endpoint = "/api/preview/mdm/commands"
         # save the pro.py file and run the script
         # the json dict for the parameter can be generated in the jamf classic api link
-        #simply go to the corresponding api, fill in the parameters, in language click on Python copy the dictionary under payload = ...
+        # simply go to the corresponding api, fill in the parameters, in language click on Python copy the dictionary under payload = ...
         # The management id can be found under the inventory, general, Jamf Pro Management ID: ...
 - Beware of endpoint deprecation. This means that the API developers have marked it as outdated and no longer recommend using it for new applications or integrations. This is often done when a newer, better, or more efficient endpoint replaces the deprecated one.
         # This can be found in the jamf classic api link. Marked with a ! next to the corresponding api.
@@ -61,7 +64,7 @@ And in the console, find the jamf file to see what is going on.
 
 
 
-source:
+# References
 - https://community.jamf.com/t5/tech-thoughts/introduction-to-jps-api-wrapper-all-in-one-package-for-using-the/ba-p/283126
 - https://gitlab.com/cvtc/appleatcvtc/jps-api-wrapper/-/blob/main/README.md#retrieving-the-password-in-python-and-authenticating
 - https://jps-api-wrapper.readthedocs.io/en/stable/
@@ -71,7 +74,7 @@ source:
 - https://www.jamf.com/blog/howto-erase-all-content-and-settings-macos-redeployment/ #reference for erase device
 - https://community.jamf.com/t5/tech-thoughts/how-to-securely-manage-local-admin-passwords-with-jamf-pro-and/ba-p/289969 # for management id
 
-# Return to service articles
+* Return to service articles
 - https://www.youtube.com/watch?v=PyYp0pfxWCw # Youtube Guide
 - https://www.youtube.com/watch?v=uZcN3d4HSUk # Youtube Demo
 - https://support.apple.com/en-gb/guide/deployment/dep0a819891e/web # Return to service
