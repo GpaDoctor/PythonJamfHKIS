@@ -237,22 +237,26 @@ def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
         # print(for_computer_group_mac_address)
         # print(for_computer_group_alt_mac_address)
         # print(for_computer_group_serial_number)
-  
-        classic.update_computer_group(
-            data="""
-                <computer_group>
-                <computer_additions>
-                    <computer>
-                    <id>{0}</id>
-                    <name>{1}</name>
-                    <mac_address>{2}</mac_address>
-                    <alt_mac_address>{3}</alt_mac_address>
-                    <serial_number>{4}</serial_number>
-                    </computer>
-                </computer_additions>
-                </computer_group>
-                """.format(for_computer_group_id, for_computer_group_name, for_computer_group_mac_address, for_computer_group_alt_mac_address, for_computer_group_serial_number), name="intended_for_local_user_account_creation_and_printer_driver_creation_trial"
-                )
+        try:
+            classic.update_computer_group(
+                data="""
+                    <computer_group>
+                    <computer_additions>
+                        <computer>
+                        <id>{0}</id>
+                        <name>{1}</name>
+                        <mac_address>{2}</mac_address>
+                        <alt_mac_address>{3}</alt_mac_address>
+                        <serial_number>{4}</serial_number>
+                        </computer>
+                    </computer_additions>
+                    </computer_group>
+                    """.format(for_computer_group_id, for_computer_group_name, for_computer_group_mac_address, for_computer_group_alt_mac_address, for_computer_group_serial_number), name="intended_for_local_user_account_creation_and_printer_driver_creation_trial"
+                    )
+        except Exception as e:
+            print(f"Failed to update computer group: {e}")
+            shared.computer_failed_to_add_in_group.append(for_computer_group_name)
+            continue
 
     try:
         classic.delete_policy(name="local_user_account_creation_trial")
@@ -776,22 +780,22 @@ def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
                 # the json dict for the parameter can be generated in the jamf classic api link
                 # simply go to the corresponding api, fill in the parameters, in language click on Python copy the dictionary under payload = ...
                 # The management id can be found under the inventory, general, Jamf Pro Management ID: ...
-                # pro.create_mdm_command(
-                #     {
-                #         "commandData": {
-                #             "commandType": "ERASE_DEVICE",
-                #             "returnToService": {
-                #                 "enabled": True,
-                #                 "mdmProfileData": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPCFET0NUWVBFIHBsaXN0IFBVQkxJQyAiLS8vQXBwbGUvL0RURCBQTElTVCAxLjAvL0VOIiAiaHR0cDovL3d3dy5hcHBsZS5jb20vRFREcy9Qcm9wZXJ0eUxpc3QtMS4wLmR0ZCI+CjxwbGlzdCB2ZXJzaW9uPSIxIj4KICA8ZGljdD4KICAgIDxrZXk+UGF5bG9hZFVVSUQ8L2tleT4KICAgIDxzdHJpbmc+QzgwQkUxQUYtRTdDNC00MUY4LTg3QTEtMzUxQTFFNUNFNDVGPC9zdHJpbmc+CiAgICA8a2V5PlBheWxvYWRUeXBlPC9rZXk+CiAgICA8c3RyaW5nPkNvbmZpZ3VyYXRpb248L3N0cmluZz4KICAgIDxrZXk+UGF5bG9hZE9yZ2FuaXphdGlvbjwva2V5PgogICAgPHN0cmluZz5Ib25nIEtvbmcgSW50ZXJuYXRpb25hbCBTY2hvb2w8L3N0cmluZz4KICAgIDxrZXk+UGF5bG9hZElkZW50aWZpZXI8L2tleT4KICAgIDxzdHJpbmc+QzgwQkUxQUYtRTdDNC00MUY4LTg3QTEtMzUxQTFFNUNFNDVGPC9zdHJpbmc+CiAgICA8a2V5PlBheWxvYWREaXNwbGF5TmFtZTwva2V5PgogICAgPHN0cmluZz5IS0lTU0hBUkVEIFdpRmk8L3N0cmluZz4KICAgIDxrZXk+UGF5bG9hZERlc2NyaXB0aW9uPC9rZXk+CiAgICA8c3RyaW5nLz4KICAgIDxrZXk+UGF5bG9hZFZlcnNpb248L2tleT4KICAgIDxpbnRlZ2VyPjE8L2ludGVnZXI+CiAgICA8a2V5PlBheWxvYWRFbmFibGVkPC9rZXk+CiAgICA8dHJ1ZS8+CiAgICA8a2V5PlBheWxvYWRSZW1vdmFsRGlzYWxsb3dlZDwva2V5PgogICAgPHRydWUvPgogICAgPGtleT5QYXlsb2FkU2NvcGU8L2tleT4KICAgIDxzdHJpbmc+U3lzdGVtPC9zdHJpbmc+CiAgICA8a2V5PlBheWxvYWRDb250ZW50PC9rZXk+CiAgICA8YXJyYXk+CiAgICAgIDxkaWN0PgogICAgICAgIDxrZXk+UGF5bG9hZFVVSUQ8L2tleT4KICAgICAgICA8c3RyaW5nPjJFRjI4QzUzLTA2MEUtNEFGNi04NDhGLTE2Mjg0QTM3MDJDRTwvc3RyaW5nPgogICAgICAgIDxrZXk+UGF5bG9hZFR5cGU8L2tleT4KICAgICAgICA8c3RyaW5nPmNvbS5hcHBsZS53aWZpLm1hbmFnZWQ8L3N0cmluZz4KICAgICAgICA8a2V5PlBheWxvYWRPcmdhbml6YXRpb248L2tleT4KICAgICAgICA8c3RyaW5nPkhvbmcgS29uZyBJbnRlcm5hdGlvbmFsIFNjaG9vbDwvc3RyaW5nPgogICAgICAgIDxrZXk+UGF5bG9hZElkZW50aWZpZXI8L2tleT4KICAgICAgICA8c3RyaW5nPjJFRjI4QzUzLTA2MEUtNEFGNi04NDhGLTE2Mjg0QTM3MDJDRTwvc3RyaW5nPgogICAgICAgIDxrZXk+UGF5bG9hZERpc3BsYXlOYW1lPC9rZXk+CiAgICAgICAgPHN0cmluZz5XaUZpIChIS0lTU0hBUkVEKTwvc3RyaW5nPgogICAgICAgIDxrZXk+UGF5bG9hZERlc2NyaXB0aW9uPC9rZXk+CiAgICAgICAgPHN0cmluZy8+CiAgICAgICAgPGtleT5QYXlsb2FkVmVyc2lvbjwva2V5PgogICAgICAgIDxpbnRlZ2VyPjE8L2ludGVnZXI+CiAgICAgICAgPGtleT5QYXlsb2FkRW5hYmxlZDwva2V5PgogICAgICAgIDx0cnVlLz4KICAgICAgICA8a2V5PkhJRERFTl9ORVRXT1JLPC9rZXk+CiAgICAgICAgPGZhbHNlLz4KICAgICAgICA8a2V5PlBhc3N3b3JkPC9rZXk+CiAgICAgICAgPHN0cmluZz4xQG10aGVXQGxydXM8L3N0cmluZz4KICAgICAgICA8a2V5PkVuY3J5cHRpb25UeXBlPC9rZXk+CiAgICAgICAgPHN0cmluZz5XUEE8L3N0cmluZz4KICAgICAgICA8a2V5PkF1dG9Kb2luPC9rZXk+CiAgICAgICAgPHRydWUvPgogICAgICAgIDxrZXk+Q2FwdGl2ZUJ5cGFzczwva2V5PgogICAgICAgIDxmYWxzZS8+CiAgICAgICAgPGtleT5Qcm94eVR5cGU8L2tleT4KICAgICAgICA8c3RyaW5nPk5vbmU8L3N0cmluZz4KICAgICAgICA8a2V5PlNldHVwTW9kZXM8L2tleT4KICAgICAgICA8YXJyYXkvPgogICAgICAgIDxrZXk+U1NJRF9TVFI8L2tleT4KICAgICAgICA8c3RyaW5nPkhLSVNTSEFSRUQ8L3N0cmluZz4KICAgICAgICA8a2V5PkludGVyZmFjZTwva2V5PgogICAgICAgIDxzdHJpbmc+QnVpbHRJbldpcmVsZXNzPC9zdHJpbmc+CiAgICAgIDwvZGljdD4KICAgIDwvYXJyYXk+CiAgPC9kaWN0Pgo8L3BsaXN0Pgo=",
-                #                 "wifiProfileData": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPCFET0NUWVBFIHBsaXN0IFBVQkxJQyAiLS8vQXBwbGUvL0RURCBQTElTVCAxLjAvL0VOIiAiaHR0cDovL3d3dy5hcHBsZS5jb20vRFREcy9Qcm9wZXJ0eUxpc3QtMS4wLmR0ZCI+CjxwbGlzdCB2ZXJzaW9uPSIxIj4KICA8ZGljdD4KICAgIDxrZXk+UGF5bG9hZFVVSUQ8L2tleT4KICAgIDxzdHJpbmc+QzgwQkUxQUYtRTdDNC00MUY4LTg3QTEtMzUxQTFFNUNFNDVGPC9zdHJpbmc+CiAgICA8a2V5PlBheWxvYWRUeXBlPC9rZXk+CiAgICA8c3RyaW5nPkNvbmZpZ3VyYXRpb248L3N0cmluZz4KICAgIDxrZXk+UGF5bG9hZE9yZ2FuaXphdGlvbjwva2V5PgogICAgPHN0cmluZz5Ib25nIEtvbmcgSW50ZXJuYXRpb25hbCBTY2hvb2w8L3N0cmluZz4KICAgIDxrZXk+UGF5bG9hZElkZW50aWZpZXI8L2tleT4KICAgIDxzdHJpbmc+QzgwQkUxQUYtRTdDNC00MUY4LTg3QTEtMzUxQTFFNUNFNDVGPC9zdHJpbmc+CiAgICA8a2V5PlBheWxvYWREaXNwbGF5TmFtZTwva2V5PgogICAgPHN0cmluZz5IS0lTU0hBUkVEIFdpRmk8L3N0cmluZz4KICAgIDxrZXk+UGF5bG9hZERlc2NyaXB0aW9uPC9rZXk+CiAgICA8c3RyaW5nLz4KICAgIDxrZXk+UGF5bG9hZFZlcnNpb248L2tleT4KICAgIDxpbnRlZ2VyPjE8L2ludGVnZXI+CiAgICA8a2V5PlBheWxvYWRFbmFibGVkPC9rZXk+CiAgICA8dHJ1ZS8+CiAgICA8a2V5PlBheWxvYWRSZW1vdmFsRGlzYWxsb3dlZDwva2V5PgogICAgPHRydWUvPgogICAgPGtleT5QYXlsb2FkU2NvcGU8L2tleT4KICAgIDxzdHJpbmc+U3lzdGVtPC9zdHJpbmc+CiAgICA8a2V5PlBheWxvYWRDb250ZW50PC9rZXk+CiAgICA8YXJyYXk+CiAgICAgIDxkaWN0PgogICAgICAgIDxrZXk+UGF5bG9hZFVVSUQ8L2tleT4KICAgICAgICA8c3RyaW5nPjJFRjI4QzUzLTA2MEUtNEFGNi04NDhGLTE2Mjg0QTM3MDJDRTwvc3RyaW5nPgogICAgICAgIDxrZXk+UGF5bG9hZFR5cGU8L2tleT4KICAgICAgICA8c3RyaW5nPmNvbS5hcHBsZS53aWZpLm1hbmFnZWQ8L3N0cmluZz4KICAgICAgICA8a2V5PlBheWxvYWRPcmdhbml6YXRpb248L2tleT4KICAgICAgICA8c3RyaW5nPkhvbmcgS29uZyBJbnRlcm5hdGlvbmFsIFNjaG9vbDwvc3RyaW5nPgogICAgICAgIDxrZXk+UGF5bG9hZElkZW50aWZpZXI8L2tleT4KICAgICAgICA8c3RyaW5nPjJFRjI4QzUzLTA2MEUtNEFGNi04NDhGLTE2Mjg0QTM3MDJDRTwvc3RyaW5nPgogICAgICAgIDxrZXk+UGF5bG9hZERpc3BsYXlOYW1lPC9rZXk+CiAgICAgICAgPHN0cmluZz5XaUZpIChIS0lTU0hBUkVEKTwvc3RyaW5nPgogICAgICAgIDxrZXk+UGF5bG9hZERlc2NyaXB0aW9uPC9rZXk+CiAgICAgICAgPHN0cmluZy8+CiAgICAgICAgPGtleT5QYXlsb2FkVmVyc2lvbjwva2V5PgogICAgICAgIDxpbnRlZ2VyPjE8L2ludGVnZXI+CiAgICAgICAgPGtleT5QYXlsb2FkRW5hYmxlZDwva2V5PgogICAgICAgIDx0cnVlLz4KICAgICAgICA8a2V5PkhJRERFTl9ORVRXT1JLPC9rZXk+CiAgICAgICAgPGZhbHNlLz4KICAgICAgICA8a2V5PlBhc3N3b3JkPC9rZXk+CiAgICAgICAgPHN0cmluZz4xQG10aGVXQGxydXM8L3N0cmluZz4KICAgICAgICA8a2V5PkVuY3J5cHRpb25UeXBlPC9rZXk+CiAgICAgICAgPHN0cmluZz5XUEE8L3N0cmluZz4KICAgICAgICA8a2V5PkF1dG9Kb2luPC9rZXk+CiAgICAgICAgPHRydWUvPgogICAgICAgIDxrZXk+Q2FwdGl2ZUJ5cGFzczwva2V5PgogICAgICAgIDxmYWxzZS8+CiAgICAgICAgPGtleT5Qcm94eVR5cGU8L2tleT4KICAgICAgICA8c3RyaW5nPk5vbmU8L3N0cmluZz4KICAgICAgICA8a2V5PlNldHVwTW9kZXM8L2tleT4KICAgICAgICA8YXJyYXkvPgogICAgICAgIDxrZXk+U1NJRF9TVFI8L2tleT4KICAgICAgICA8c3RyaW5nPkhLSVNTSEFSRUQ8L3N0cmluZz4KICAgICAgICA8a2V5PkludGVyZmFjZTwva2V5PgogICAgICAgIDxzdHJpbmc+QnVpbHRJbldpcmVsZXNzPC9zdHJpbmc+CiAgICAgIDwvZGljdD4KICAgIDwvYXJyYXk+CiAgPC9kaWN0Pgo8L3BsaXN0Pgo="
-                #             },
-                #             "pin": "123456"
-                #         },
-                #         "clientData": [{ "managementId": management_id }]
-                #     }
-                # )
+                pro.create_mdm_command(
+                    {
+                        "commandData": {
+                            "commandType": "ERASE_DEVICE",
+                            "returnToService": {
+                                "enabled": True,
+                                "mdmProfileData": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPCFET0NUWVBFIHBsaXN0IFBVQkxJQyAiLS8vQXBwbGUvL0RURCBQTElTVCAxLjAvL0VOIiAiaHR0cDovL3d3dy5hcHBsZS5jb20vRFREcy9Qcm9wZXJ0eUxpc3QtMS4wLmR0ZCI+CjxwbGlzdCB2ZXJzaW9uPSIxIj4KICA8ZGljdD4KICAgIDxrZXk+UGF5bG9hZFVVSUQ8L2tleT4KICAgIDxzdHJpbmc+QzgwQkUxQUYtRTdDNC00MUY4LTg3QTEtMzUxQTFFNUNFNDVGPC9zdHJpbmc+CiAgICA8a2V5PlBheWxvYWRUeXBlPC9rZXk+CiAgICA8c3RyaW5nPkNvbmZpZ3VyYXRpb248L3N0cmluZz4KICAgIDxrZXk+UGF5bG9hZE9yZ2FuaXphdGlvbjwva2V5PgogICAgPHN0cmluZz5Ib25nIEtvbmcgSW50ZXJuYXRpb25hbCBTY2hvb2w8L3N0cmluZz4KICAgIDxrZXk+UGF5bG9hZElkZW50aWZpZXI8L2tleT4KICAgIDxzdHJpbmc+QzgwQkUxQUYtRTdDNC00MUY4LTg3QTEtMzUxQTFFNUNFNDVGPC9zdHJpbmc+CiAgICA8a2V5PlBheWxvYWREaXNwbGF5TmFtZTwva2V5PgogICAgPHN0cmluZz5IS0lTU0hBUkVEIFdpRmk8L3N0cmluZz4KICAgIDxrZXk+UGF5bG9hZERlc2NyaXB0aW9uPC9rZXk+CiAgICA8c3RyaW5nLz4KICAgIDxrZXk+UGF5bG9hZFZlcnNpb248L2tleT4KICAgIDxpbnRlZ2VyPjE8L2ludGVnZXI+CiAgICA8a2V5PlBheWxvYWRFbmFibGVkPC9rZXk+CiAgICA8dHJ1ZS8+CiAgICA8a2V5PlBheWxvYWRSZW1vdmFsRGlzYWxsb3dlZDwva2V5PgogICAgPHRydWUvPgogICAgPGtleT5QYXlsb2FkU2NvcGU8L2tleT4KICAgIDxzdHJpbmc+U3lzdGVtPC9zdHJpbmc+CiAgICA8a2V5PlBheWxvYWRDb250ZW50PC9rZXk+CiAgICA8YXJyYXk+CiAgICAgIDxkaWN0PgogICAgICAgIDxrZXk+UGF5bG9hZFVVSUQ8L2tleT4KICAgICAgICA8c3RyaW5nPjJFRjI4QzUzLTA2MEUtNEFGNi04NDhGLTE2Mjg0QTM3MDJDRTwvc3RyaW5nPgogICAgICAgIDxrZXk+UGF5bG9hZFR5cGU8L2tleT4KICAgICAgICA8c3RyaW5nPmNvbS5hcHBsZS53aWZpLm1hbmFnZWQ8L3N0cmluZz4KICAgICAgICA8a2V5PlBheWxvYWRPcmdhbml6YXRpb248L2tleT4KICAgICAgICA8c3RyaW5nPkhvbmcgS29uZyBJbnRlcm5hdGlvbmFsIFNjaG9vbDwvc3RyaW5nPgogICAgICAgIDxrZXk+UGF5bG9hZElkZW50aWZpZXI8L2tleT4KICAgICAgICA8c3RyaW5nPjJFRjI4QzUzLTA2MEUtNEFGNi04NDhGLTE2Mjg0QTM3MDJDRTwvc3RyaW5nPgogICAgICAgIDxrZXk+UGF5bG9hZERpc3BsYXlOYW1lPC9rZXk+CiAgICAgICAgPHN0cmluZz5XaUZpIChIS0lTU0hBUkVEKTwvc3RyaW5nPgogICAgICAgIDxrZXk+UGF5bG9hZERlc2NyaXB0aW9uPC9rZXk+CiAgICAgICAgPHN0cmluZy8+CiAgICAgICAgPGtleT5QYXlsb2FkVmVyc2lvbjwva2V5PgogICAgICAgIDxpbnRlZ2VyPjE8L2ludGVnZXI+CiAgICAgICAgPGtleT5QYXlsb2FkRW5hYmxlZDwva2V5PgogICAgICAgIDx0cnVlLz4KICAgICAgICA8a2V5PkhJRERFTl9ORVRXT1JLPC9rZXk+CiAgICAgICAgPGZhbHNlLz4KICAgICAgICA8a2V5PlBhc3N3b3JkPC9rZXk+CiAgICAgICAgPHN0cmluZz4xQG10aGVXQGxydXM8L3N0cmluZz4KICAgICAgICA8a2V5PkVuY3J5cHRpb25UeXBlPC9rZXk+CiAgICAgICAgPHN0cmluZz5XUEE8L3N0cmluZz4KICAgICAgICA8a2V5PkF1dG9Kb2luPC9rZXk+CiAgICAgICAgPHRydWUvPgogICAgICAgIDxrZXk+Q2FwdGl2ZUJ5cGFzczwva2V5PgogICAgICAgIDxmYWxzZS8+CiAgICAgICAgPGtleT5Qcm94eVR5cGU8L2tleT4KICAgICAgICA8c3RyaW5nPk5vbmU8L3N0cmluZz4KICAgICAgICA8a2V5PlNldHVwTW9kZXM8L2tleT4KICAgICAgICA8YXJyYXkvPgogICAgICAgIDxrZXk+U1NJRF9TVFI8L2tleT4KICAgICAgICA8c3RyaW5nPkhLSVNTSEFSRUQ8L3N0cmluZz4KICAgICAgICA8a2V5PkludGVyZmFjZTwva2V5PgogICAgICAgIDxzdHJpbmc+QnVpbHRJbldpcmVsZXNzPC9zdHJpbmc+CiAgICAgIDwvZGljdD4KICAgIDwvYXJyYXk+CiAgPC9kaWN0Pgo8L3BsaXN0Pgo=",
+                                "wifiProfileData": "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPCFET0NUWVBFIHBsaXN0IFBVQkxJQyAiLS8vQXBwbGUvL0RURCBQTElTVCAxLjAvL0VOIiAiaHR0cDovL3d3dy5hcHBsZS5jb20vRFREcy9Qcm9wZXJ0eUxpc3QtMS4wLmR0ZCI+CjxwbGlzdCB2ZXJzaW9uPSIxIj4KICA8ZGljdD4KICAgIDxrZXk+UGF5bG9hZFVVSUQ8L2tleT4KICAgIDxzdHJpbmc+QzgwQkUxQUYtRTdDNC00MUY4LTg3QTEtMzUxQTFFNUNFNDVGPC9zdHJpbmc+CiAgICA8a2V5PlBheWxvYWRUeXBlPC9rZXk+CiAgICA8c3RyaW5nPkNvbmZpZ3VyYXRpb248L3N0cmluZz4KICAgIDxrZXk+UGF5bG9hZE9yZ2FuaXphdGlvbjwva2V5PgogICAgPHN0cmluZz5Ib25nIEtvbmcgSW50ZXJuYXRpb25hbCBTY2hvb2w8L3N0cmluZz4KICAgIDxrZXk+UGF5bG9hZElkZW50aWZpZXI8L2tleT4KICAgIDxzdHJpbmc+QzgwQkUxQUYtRTdDNC00MUY4LTg3QTEtMzUxQTFFNUNFNDVGPC9zdHJpbmc+CiAgICA8a2V5PlBheWxvYWREaXNwbGF5TmFtZTwva2V5PgogICAgPHN0cmluZz5IS0lTU0hBUkVEIFdpRmk8L3N0cmluZz4KICAgIDxrZXk+UGF5bG9hZERlc2NyaXB0aW9uPC9rZXk+CiAgICA8c3RyaW5nLz4KICAgIDxrZXk+UGF5bG9hZFZlcnNpb248L2tleT4KICAgIDxpbnRlZ2VyPjE8L2ludGVnZXI+CiAgICA8a2V5PlBheWxvYWRFbmFibGVkPC9rZXk+CiAgICA8dHJ1ZS8+CiAgICA8a2V5PlBheWxvYWRSZW1vdmFsRGlzYWxsb3dlZDwva2V5PgogICAgPHRydWUvPgogICAgPGtleT5QYXlsb2FkU2NvcGU8L2tleT4KICAgIDxzdHJpbmc+U3lzdGVtPC9zdHJpbmc+CiAgICA8a2V5PlBheWxvYWRDb250ZW50PC9rZXk+CiAgICA8YXJyYXk+CiAgICAgIDxkaWN0PgogICAgICAgIDxrZXk+UGF5bG9hZFVVSUQ8L2tleT4KICAgICAgICA8c3RyaW5nPjJFRjI4QzUzLTA2MEUtNEFGNi04NDhGLTE2Mjg0QTM3MDJDRTwvc3RyaW5nPgogICAgICAgIDxrZXk+UGF5bG9hZFR5cGU8L2tleT4KICAgICAgICA8c3RyaW5nPmNvbS5hcHBsZS53aWZpLm1hbmFnZWQ8L3N0cmluZz4KICAgICAgICA8a2V5PlBheWxvYWRPcmdhbml6YXRpb248L2tleT4KICAgICAgICA8c3RyaW5nPkhvbmcgS29uZyBJbnRlcm5hdGlvbmFsIFNjaG9vbDwvc3RyaW5nPgogICAgICAgIDxrZXk+UGF5bG9hZElkZW50aWZpZXI8L2tleT4KICAgICAgICA8c3RyaW5nPjJFRjI4QzUzLTA2MEUtNEFGNi04NDhGLTE2Mjg0QTM3MDJDRTwvc3RyaW5nPgogICAgICAgIDxrZXk+UGF5bG9hZERpc3BsYXlOYW1lPC9rZXk+CiAgICAgICAgPHN0cmluZz5XaUZpIChIS0lTU0hBUkVEKTwvc3RyaW5nPgogICAgICAgIDxrZXk+UGF5bG9hZERlc2NyaXB0aW9uPC9rZXk+CiAgICAgICAgPHN0cmluZy8+CiAgICAgICAgPGtleT5QYXlsb2FkVmVyc2lvbjwva2V5PgogICAgICAgIDxpbnRlZ2VyPjE8L2ludGVnZXI+CiAgICAgICAgPGtleT5QYXlsb2FkRW5hYmxlZDwva2V5PgogICAgICAgIDx0cnVlLz4KICAgICAgICA8a2V5PkhJRERFTl9ORVRXT1JLPC9rZXk+CiAgICAgICAgPGZhbHNlLz4KICAgICAgICA8a2V5PlBhc3N3b3JkPC9rZXk+CiAgICAgICAgPHN0cmluZz4xQG10aGVXQGxydXM8L3N0cmluZz4KICAgICAgICA8a2V5PkVuY3J5cHRpb25UeXBlPC9rZXk+CiAgICAgICAgPHN0cmluZz5XUEE8L3N0cmluZz4KICAgICAgICA8a2V5PkF1dG9Kb2luPC9rZXk+CiAgICAgICAgPHRydWUvPgogICAgICAgIDxrZXk+Q2FwdGl2ZUJ5cGFzczwva2V5PgogICAgICAgIDxmYWxzZS8+CiAgICAgICAgPGtleT5Qcm94eVR5cGU8L2tleT4KICAgICAgICA8c3RyaW5nPk5vbmU8L3N0cmluZz4KICAgICAgICA8a2V5PlNldHVwTW9kZXM8L2tleT4KICAgICAgICA8YXJyYXkvPgogICAgICAgIDxrZXk+U1NJRF9TVFI8L2tleT4KICAgICAgICA8c3RyaW5nPkhLSVNTSEFSRUQ8L3N0cmluZz4KICAgICAgICA8a2V5PkludGVyZmFjZTwva2V5PgogICAgICAgIDxzdHJpbmc+QnVpbHRJbldpcmVsZXNzPC9zdHJpbmc+CiAgICAgIDwvZGljdD4KICAgIDwvYXJyYXk+CiAgPC9kaWN0Pgo8L3BsaXN0Pgo="
+                            },
+                            "pin": "123456"
+                        },
+                        "clientData": [{ "managementId": management_id }]
+                    }
+                )
 
-
+        print(f"The following macs failed to add into computer group: {shared.computer_failed_to_add_in_group}")
         f = input("Press ENTER to continue...")
         for i_index, i_value in enumerate(shared.excel_data):
                 pro.create_mdm_command(

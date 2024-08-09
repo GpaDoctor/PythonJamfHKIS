@@ -10,7 +10,8 @@ xlsx_file_path = '/Users/lawerance/repo/Book.xlsx'
 #Get data from excel
 shared.excel_data = getdata.get_data_from_xlsx(xlsx_file_path)
 
-# update_jamf.Execute(JPS_URL, JPS_USERNAME,JPS_PASSWORD)
+update_jamf.Execute(JPS_URL, JPS_USERNAME,JPS_PASSWORD)
+time.sleep(2)
 
 reset_computer.reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD)
 

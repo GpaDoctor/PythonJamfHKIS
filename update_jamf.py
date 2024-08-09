@@ -89,7 +89,7 @@ def Execute(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
 			# # print(UserInformation)
 			# # exit()
 
-			# JUST GET THE DATA FROM THE EXCEL FILE AND UPDATE THE JEMF
+			# JUST GET THE DATA FROM THE EXCEL FILE AND UPDATE THE JAMF
 			for j_index, j_value in enumerate(LocationInformation):
 				UserInformation.append(str(i[j_index]))
 				print(f"{j_value}: {UserInformation[-1]}")

@@ -10,3 +10,6 @@ missing_computers = []
 
 #error in updating
 error_in_updating = []
+
+# computer failed to add in group
+computer_failed_to_add_in_group = []
