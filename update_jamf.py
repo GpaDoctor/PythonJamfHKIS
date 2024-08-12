@@ -3,7 +3,7 @@ from my_module import *
 
 def Execute(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
 
-	# Connect to Jemf
+	# Connect to Jamf
 	with Classic(JPS_URL, JPS_USERNAME,JPS_PASSWORD) as classic:
 
 		#UserName = []
@@ -65,7 +65,7 @@ def Execute(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
 			print("\n")
 
 
-			# # To get user information from Jemf
+			# # To get user information from Jamf
 			# try:
 			# 	GetUserInfo = classic.get_user(name=UserName, data_type="json")
 			# 	# Process GetUserInfo as it's successfully retrieved

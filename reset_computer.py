@@ -1,7 +1,7 @@
 from my_module import *
 
 def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
-	# Connect to Jemf        
+	# Connect to Jamf        
     with Classic(JPS_URL, JPS_USERNAME,JPS_PASSWORD) as classic:
         full_name_list =[]
         username_list = [] 
