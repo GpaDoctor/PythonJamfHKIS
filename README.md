@@ -3,11 +3,12 @@
 This is a new project using JAMF Pro incooporating with Python using API to monitor and manipulate MACs.
 
 Install the following applications
-Assume installed: Python3, git, VS Code is recommended
+Assume installed: Python3, VS Code is recommended. In VS Code install extensions GitHub Desktop, Git Extension Pack
 - pip3 install jps-api-wrapper       jps-api-wrapper       
 - pip3 install lxml                  for xml files
 - pip3 install pandas                for csv files
 - pip3 install openpyxl              for xlsx files
+Install the repo from Github
 
 For mac, type the following in terminal
 setopt HIST_IGNORE_SPACE
@@ -41,7 +42,7 @@ Run the main.py and you are good to go.
         On the spcified computer,
         Open terminal.
         Type sudo jamf recon
-        And in the console, find the jamf file to see what is going on.
+        And in the console, under the Log Report tab, find the jamf.log file to see what is going on.
 
 - INCASE unable to refresh authentication. Restart VS Code completely and retype the authentication.
 - INCASE import does not work. Click the bottom right hand corner Python 3.12.4 64-bit. Choose Global, then choose back Recommened.

@@ -23,5 +23,6 @@ import getdata
 import update_jamf
 import reset_computer
 import user_creation
+import prestage
 
 

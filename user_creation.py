@@ -1,3 +1,4 @@
+# deprecated
 from my_module import *
 
 # def create_user(username, password, full_name):

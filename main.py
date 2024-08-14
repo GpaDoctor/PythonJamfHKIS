@@ -17,7 +17,11 @@ def main():
     update_jamf.Execute(JPS_URL, JPS_USERNAME, JPS_PASSWORD)
     time.sleep(2)
 
+    # prestage.pre_enroll(JPS_URL, JPS_USERNAME, JPS_PASSWORD)
+
     reset_computer.reset(JPS_URL, JPS_USERNAME, JPS_PASSWORD)
+
+    
 
 if __name__ == "__main__":
     main()
