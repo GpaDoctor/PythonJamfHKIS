@@ -21,7 +21,7 @@ def Execute(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
 			# print(f"Serial Number: {SerialNumber}")
 			# continue
 			# ComputerName = "This is amazinggggggg"	# *
-			LocationInformation = ["Email Address", "Username", "Preferred", "Surname", "Department", "Business Title", "Campus", "Telephone", "Room"]
+			LocationInformation = ["Email Address", "Username", "Preferred", "Surname", "Deparment Code", "Department", "Business Title", "Campus", "Telephone", "Room", "Inventory Number"]
 
 			# Assign variables
 			
@@ -94,6 +94,9 @@ def Execute(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
 				UserInformation.append(str(i[j_index]))
 				print(f"{j_value}: {UserInformation[-1]}")
 			full_name = str(UserInformation[2]) + " " + str(UserInformation[3])
+			name_for_computer = str(UserInformation[4]) + " LTOP " + str(UserInformation[10])
+			print(name_for_computer)
+
 
 
 			print("\n")
@@ -105,7 +108,7 @@ def Execute(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
 				f"""
 				<computer>
 					<general>
-					<name>{full_name}'s Computer</name>
+					<name>{name_for_computer}</name>
 					</general>
 				</computer>
 				""",													#Xml are in "" therefore use f string and use {} to include variables
@@ -135,11 +138,11 @@ def Execute(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
 							<realname>{full_name}</realname>
 							<real_name/>
 							<email_address>{UserInformation[0]}</email_address>
-							<position>{UserInformation[5]}</position>
-							<phone>{UserInformation[7]}</phone>
+							<position>{UserInformation[6]}</position>
+							<phone>{UserInformation[8]}</phone>
 							<department>{UserInformation[4]}</department>
-							<building>{UserInformation[6]}</building>
-							<room>{UserInformation[8]}</room>
+							<building>{UserInformation[7]}</building>
+							<room>{UserInformation[9]}</room>
 						</location>
 					</computer>
 					""",
@@ -159,12 +162,12 @@ def Execute(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
 								<realname>{full_name}</realname>
 								<real_name/>
 								<email_address>{UserInformation[0]}</email_address>
-								<position>{UserInformation[5]}</position>
-								<phone>{UserInformation[7]}</phone>
-								<phone_number>{UserInformation[7]}</phone_number>
+								<position>{UserInformation[6]}</position>
+								<phone>{UserInformation[8]}</phone>
+								<phone_number>{UserInformation[8]}</phone_number>
 								<department>{UserInformation[4]}</department>
 								<building></building>
-								<room>{UserInformation[8]}</room>
+								<room>{UserInformation[9]}</room>
 							</location>
 						</computer>
 						""",
@@ -183,11 +186,11 @@ def Execute(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
 									<realname>{full_name}</realname>
 									<real_name/>
 									<email_address>{UserInformation[0]}</email_address>
-									<position>{UserInformation[5]}</position>
-									<phone>{UserInformation[7]}</phone>
+									<position>{UserInformation[6]}</position>
+									<phone>{UserInformation[8]}</phone>
 									<department></department>
-									<building>{UserInformation[6]}</building>
-									<room>{UserInformation[8]}</room>
+									<building>{UserInformation[7]}</building>
+									<room>{UserInformation[9]}</room>
 								</location>
 							</computer>
 							""",
@@ -205,11 +208,11 @@ def Execute(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
 									<realname>{full_name}</realname>
 									<real_name/>
 									<email_address>{UserInformation[0]}</email_address>
-									<position>{UserInformation[5]}</position>
-									<phone>{UserInformation[7]}</phone>
+									<position>{UserInformation[6]}</position>
+									<phone>{UserInformation[8]}</phone>
 									<department></department>
 									<building></building>
-									<room>{UserInformation[8]}</room>
+									<room>{UserInformation[9]}</room>
 								</location>
 							</computer>
 							""",

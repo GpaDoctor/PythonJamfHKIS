@@ -2,7 +2,7 @@ from my_module import *
 
 def get_data_from_xlsx(file_path):
     data_list = []                                              
-    df = pd.read_excel(file_path, sheet_name='Sheet3', usecols='A,B,E,F,K,L,N,P,Q,U', skiprows=1,header=None)
+    df = pd.read_excel(file_path, sheet_name='Sheet3', usecols='A,B,E,F,J,K,L,N,P,Q,U,V', skiprows=1,header=None)
     for index, row in df.iterrows():
         data_list.append(row.tolist())
         

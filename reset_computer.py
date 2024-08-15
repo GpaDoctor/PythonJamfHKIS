@@ -5,17 +5,25 @@ def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
     with Classic(JPS_URL, JPS_USERNAME,JPS_PASSWORD) as classic:
         full_name_list =[]
         username_list = [] 
+        name_for_computer_creation_list = []
         serialnumber_list = []
         for i in shared.excel_data:
             full_name_list.append(str(i[2]) + " " + str(i[3]))
             fullname_array = np.array(full_name_list)
             username_list.append(str(i[1]))
             username_array = np.array(username_list)
+            name_for_computer_creation_list.append(str(i[4]) + " LTOP " + str(i[10]))
+            name_for_computer_creation_array = np.array(name_for_computer_creation_list)
             serialnumber_list.append(str(i[-1]))
             serialnumber_array = np.array(serialnumber_list)
         fullname_array = str(fullname_array).strip("[]")
+        name_for_computer_creation_array= str(name_for_computer_creation_array).strip("[]")
         username_array = str(username_array).strip("[]")
         serialnumber_array = str(serialnumber_array).strip("[]")
+
+        print(name_for_computer_creation_list)
+
+  
 
     # x = classic.get_policy(name="somehow", data_type="xml")
     # with open("output.txt", "w") as f:
@@ -857,7 +865,7 @@ def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
                     {
                     "commandData": {
                         "commandType": "SETTINGS",
-                        "deviceName": f"{full_name_list[i_index]}'s Happiest Mac In THE WORLD",
+                        "deviceName": f"{name_for_computer_creation_list[i_index]}'s Happiest Mac In THE WORLD",
                     },
                     "clientData": [
                         {
