@@ -28,6 +28,23 @@ def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
     #     f.write(str(x))
     # exit() 
 
+    # x = classic.get_computer_history(serialnumber="C02YV2LAJK7M", subsets=["ComputerUsageLogs"])
+    # latest_log = x['computer_history']['computer_usage_logs'][-1]
+    # log_year = latest_log['date_time_utc'][:4]
+    # log_month = latest_log['date_time_utc'][5:7]
+    # log_date = latest_log['date_time_utc'][8:10]
+    # log_hour = latest_log['date_time_utc'][11:13]
+    # log_minute = latest_log['date_time_utc'][14:16]
+    # log_second = latest_log['date_time_utc'][17:19]
+    # dt = datetime(int(log_year), int(log_month), int(log_date), int(log_hour), int(log_minute), int(log_second))
+    # timestamp_utc = calendar.timegm(dt.utctimetuple())
+    # # print("Datetime:", dt)
+    # print( timestamp_utc)
+    # print(time.time())
+    # # with open("output.txt", "w") as f:
+    # #     f.write(str(x))
+    # exit()
+
 
     # For deleting the policy
     try:
@@ -270,13 +287,14 @@ def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
         </computer_group>
         """, id=0
     )
-
+    stack = []
     for i in shared.excel_data:
         for_computer_group_id = classic.get_computer(serialnumber=i[-1])['computer']['general']['id']
         for_computer_group_name = classic.get_computer(serialnumber=i[-1])['computer']['general']['name']
         for_computer_group_mac_address = classic.get_computer(serialnumber=i[-1])['computer']['general']['mac_address']
         for_computer_group_alt_mac_address = classic.get_computer(serialnumber=i[-1])['computer']['general']['alt_mac_address']
         for_computer_group_serial_number = classic.get_computer(serialnumber=i[-1])['computer']['general']['serial_number']
+        stack.append(classic.get_computer(serialnumber=i[-1])['computer']['general']['serial_number'])
         # print(for_computer_group_id)
         # print(for_computer_group_name) 
         # print(for_computer_group_mac_address)
@@ -544,8 +562,8 @@ def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
                 <enabled>true</enabled>
                 <trigger>EVENT</trigger>
                 <trigger_checkin>false</trigger_checkin>
-                <trigger_enrollment_complete>true</trigger_enrollment_complete>
-                <trigger_login>false</trigger_login>
+                <trigger_enrollment_complete>false</trigger_enrollment_complete>
+                <trigger_login>true</trigger_login>
                 <trigger_network_state_changed>false</trigger_network_state_changed>
                 <trigger_startup>false</trigger_startup>
                 <trigger_other/>
@@ -724,272 +742,7 @@ def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
         """.format(computer_group_id, computer_group_name, script_id, script_name), 0
     )
 
-    # create a policy for printer driver creation
-    script_id = classic.get_script(name="printer_driver_creation")['script']['id']
-    script_name = classic.get_script(name="printer_driver_creation")['script']['name']
-
-    classic.create_policy(
-        """
-        <policy>
-            <general>
-                <name>printer_driver_creation_trial</name>
-                <enabled>true</enabled>
-                <trigger>USER_INITIATED</trigger>
-                <trigger_checkin>false</trigger_checkin>
-                <trigger_enrollment_complete>true</trigger_enrollment_complete>
-                <trigger_login>false</trigger_login>
-                <trigger_network_state_changed>false</trigger_network_state_changed>
-                <trigger_startup>false</trigger_startup>
-                <trigger_other/>
-                <frequency>Once per computer</frequency>
-                <retry_event>none</retry_event>
-                <retry_attempts>-1</retry_attempts>
-                <notify_on_each_failed_retry>false</notify_on_each_failed_retry>
-                <location_user_only>false</location_user_only>
-                <target_drive>/</target_drive>
-                <offline>false</offline>
-                <category>
-                    <id>104</id>
-                    <name>Lifestyle 2023-2024</name>
-                </category>
-                <date_time_limitations>
-                    <activation_date/>
-                    <activation_date_epoch>0</activation_date_epoch>
-                    <activation_date_utc/>
-                    <expiration_date/>
-                    <expiration_date_epoch>0</expiration_date_epoch>
-                    <expiration_date_utc/>
-                    <no_execute_on/>
-                    <no_execute_start/>
-                    <no_execute_end/>
-                </date_time_limitations>
-                <network_limitations>
-                    <minimum_network_connection>No Minimum</minimum_network_connection>
-                    <any_ip_address>true</any_ip_address>
-                    <network_segments/>
-                </network_limitations>
-                <override_default_settings>
-                    <target_drive>/</target_drive>
-                    <distribution_point>default</distribution_point>
-                    <force_afp_smb>false</force_afp_smb>
-                    <sus>default</sus>
-                </override_default_settings>
-                <network_requirements>Any</network_requirements>
-                <site>
-                    <id>-1</id>
-                    <name>None</name>
-                </site>
-            </general>
-            <scope>
-                <all_computers>false</all_computers>
-                <computers/>
-                <computer_groups>
-                    <computer_group>
-                        <id>{0}</id>
-                        <name>{1}</name>
-                    </computer_group>
-                </computer_groups>
-                <buildings/>
-                <departments/>
-                <limit_to_users>
-                    <user_groups/>
-                </limit_to_users>
-                <limitations>
-                    <users/>
-                    <user_groups/>
-                    <network_segments/>
-                    <ibeacons/>
-                </limitations>
-                <exclusions>
-                    <computers/>
-                    <computer_groups/>
-                    <buildings/>
-                    <departments/>
-                    <users/>
-                    <user_groups/>
-                    <network_segments/>
-                    <ibeacons/>
-                </exclusions>
-            </scope>
-            <self_service>
-                <use_for_self_service>true</use_for_self_service>
-                <self_service_display_name>Printer Driver for SW Faculty Staff</self_service_display_name>
-                <install_button_text>Install</install_button_text>
-                <reinstall_button_text>Reinstall</reinstall_button_text>
-                <self_service_description/>
-                <force_users_to_view_description>false</force_users_to_view_description>
-                <self_service_icon/>
-                <feature_on_main_page>false</feature_on_main_page>
-                <self_service_categories>
-                    <category>
-                        <id>94</id>
-                        <name>On-Boarding Staff 2023</name>
-                        <display_in>true</display_in>
-                        <feature_in>false</feature_in>
-                    </category>
-                    <category>
-                        <id>89</id>
-                        <name>Printer driver Equitrac V6</name>
-                        <display_in>true</display_in>
-                        <feature_in>false</feature_in>
-                    </category>
-                </self_service_categories>
-                <notification>false</notification>
-                <notification_type>Self Service</notification_type>
-                <notification_subject>Trial Version - Fuji Xerox - C4570</notification_subject>
-                <notification_message/>
-            </self_service>
-            <package_configuration>
-                <packages>
-                    <size>5</size>
-                    <package>
-                        <id>1066</id>
-                        <name>Booklet and Finisher Driver.dmg</name>
-                        <action>Install</action>
-                        <fut>true</fut>
-                        <feu>true</feu>
-                    </package>
-                    <package>
-                        <id>1068</id>
-                        <name>FF Printer Driver 2022 Sept 19.dmg</name>
-                        <action>Install</action>
-                        <fut>true</fut>
-                        <feu>true</feu>
-                    </package>
-                    <package>
-                        <id>555</id>
-                        <name>Fuji Xerox PS Plug-in Installer.pkg</name>
-                        <action>Install</action>
-                        <fut>false</fut>
-                        <feu>false</feu>
-                    </package>
-                    <package>
-                        <id>1069</id>
-                        <name>FUJIFILM PS Plug-in Installer- Main Driver.pkg</name>
-                        <action>Install</action>
-                        <fut>false</fut>
-                        <feu>false</feu>
-                    </package>
-                    <package>
-                        <id>1070</id>
-                        <name>printerpreset7070.dmg</name>
-                        <action>Install</action>
-                        <fut>true</fut>
-                        <feu>true</feu>
-                    </package>
-                </packages>
-                <distribution_point>default</distribution_point>
-            </package_configuration>
-            <scripts>
-                <size>3</size>
-                <script>
-                    <id>441</id>
-                    <name>PrinterPreset activate</name>
-                    <priority>After</priority>
-                    <parameter4/>
-                    <parameter5/>
-                    <parameter6/>
-                    <parameter7/>
-                    <parameter8/>
-                    <parameter9/>
-                    <parameter10/>
-                    <parameter11/>
-                </script>
-                <script>
-                    <id>361</id>
-                    <name>RemoveHKISPrinters.sh</name>
-                    <priority>Before</priority>
-                    <parameter4/>
-                    <parameter5/>
-                    <parameter6/>
-                    <parameter7/>
-                    <parameter8/>
-                    <parameter9/>
-                    <parameter10/>
-                    <parameter11/>
-                </script>
-                <script>
-                    <id>{2}</id>
-                    <name>{3}</name>
-                    <priority>After</priority>
-                    <parameter4/>
-                    <parameter5/>
-                    <parameter6/>
-                    <parameter7/>
-                    <parameter8/>
-                    <parameter9/>
-                    <parameter10/>
-                    <parameter11/>
-                </script>
-            </scripts>
-            <printers>
-                <size>0</size>
-                <leave_existing_default/>
-            </printers>
-            <dock_items>
-                <size>0</size>
-            </dock_items>
-            <account_maintenance>
-                <accounts>
-                    <size>0</size>
-                </accounts>
-                <directory_bindings>
-                    <size>0</size>
-                </directory_bindings>
-                <management_account>
-                    <action>doNotChange</action>
-                </management_account>
-                <open_firmware_efi_password>
-                    <of_mode>none</of_mode>
-                    <of_password_sha256/>
-                </open_firmware_efi_password>
-            </account_maintenance>
-            <reboot>
-                <message>This computer will restart in 5 minutes. Please save anything you are working on and log out by choosing Log Out from the bottom of the Apple menu.</message>
-                <startup_disk>Current Startup Disk</startup_disk>
-                <specify_startup/>
-                <no_user_logged_in>Do not restart</no_user_logged_in>
-                <user_logged_in>Do not restart</user_logged_in>
-                <minutes_until_reboot>5</minutes_until_reboot>
-                <start_reboot_timer_immediately>false</start_reboot_timer_immediately>
-                <file_vault_2_reboot>false</file_vault_2_reboot>
-            </reboot>
-            <maintenance>
-                <recon>true</recon>
-                <reset_name>false</reset_name>
-                <install_all_cached_packages>false</install_all_cached_packages>
-                <heal>false</heal>
-                <prebindings>false</prebindings>
-                <permissions>false</permissions>
-                <byhost>false</byhost>
-                <system_cache>false</system_cache>
-                <user_cache>false</user_cache>
-                <verify>false</verify>
-            </maintenance>
-            <files_processes>
-                <search_by_path/>
-                <delete_file>false</delete_file>
-                <locate_file/>
-                <update_locate_database>false</update_locate_database>
-                <spotlight_search/>
-                <search_for_process/>
-                <kill_process>false</kill_process>
-                <run_command/>
-            </files_processes>
-            <user_interaction>
-                <message_start/>
-                <allow_users_to_defer>false</allow_users_to_defer>
-                <allow_deferral_until_utc/>
-                <allow_deferral_minutes>0</allow_deferral_minutes>
-                <message_finish/>
-            </user_interaction>
-            <disk_encryption>
-                <action>none</action>
-            </disk_encryption>
-        </policy>
-        """.format(computer_group_id, computer_group_name, script_id, script_name) , 0
-
-    )
+ 
 
     time.sleep(1)
 
@@ -1042,7 +795,63 @@ def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
                 )
 
         print(f"The following macs failed to add into computer group: {shared.computer_failed_to_add_in_group}")
-        f = input("Press ENTER to continue...")
+
+
+
+        time.sleep(20)
+        t_end = time.time() + 10
+        current_time = time.time() + 28800
+
+        flag_1 = False
+        while time.time() < t_end:
+            for i in stack:
+                computer_time = classic.get_computer_history(serialnumber=i, subsets=["ComputerUsageLogs"])
+                with open("output.txt", "w") as f:
+                    f.write(str(computer_time))
+                latest_log = computer_time['computer_history']['computer_usage_logs'][0]
+                log_year = latest_log['date_time_utc'][:4]
+                log_month = latest_log['date_time_utc'][5:7]
+                log_date = latest_log['date_time_utc'][8:10]
+                log_hour = latest_log['date_time_utc'][11:13]
+                log_minute = latest_log['date_time_utc'][14:16]
+                log_second = latest_log['date_time_utc'][17:19]
+                dt = datetime(int(log_year), int(log_month), int(log_date), int(log_hour), int(log_minute), int(log_second))
+                timestamp_utc = calendar.timegm(dt.utctimetuple())
+                print(timestamp_utc)
+                print(current_time)
+                print("\n")
+                if timestamp_utc > current_time:
+                    print(f"{stack} before remove")
+                    stack.remove(i)
+                    print(f"{stack} after remove")
+                if not stack:
+                    flag_1 = True
+                    break
+            if flag_1 == True:
+                break
+            time.sleep(5)
+            t_end = time.time() + 10
+
+
+
+
+    #             x = classic.get_computer_history(serialnumber="C02YV2LAJK7M", subsets=["ComputerUsageLogs"])
+    # for i in x['computer_history']['computer_usage_logs']:
+    #     # if i['policy_name'] == "001_rosetta_creation_trial":
+    #     #     print(i)
+    #     print(i['date_time_epoch'])
+    #     print(time.time())
+    # with open("output.txt", "w") as f:
+    #     f.write(str(x))
+    # exit()
+
+
+
+            
+
+        # f = input("Press ENTER to continue...")
+        print("The stack is empty. Wait for 30 seconds before automatic restarting of devices")
+        time.sleep(30)
         for i_index, i_value in enumerate(shared.excel_data):
                 pro.create_mdm_command(
                     {
@@ -1057,7 +866,288 @@ def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
                     ]
                     }
                 )
+                time.sleep(2)
+                pro.create_mdm_command(
+                    {
+                        "commandData": {
+                            "commandType": "RESTART_DEVICE",
+                            "rebuildKernelCache": False
+                        },
+                        "clientData": [{ "managementId": management_id_list[i_index] }]
+                    }                    
+                )
+        
         time.sleep(1)
+
+        # create a policy for printer driver creation
+        script_id = classic.get_script(name="printer_driver_creation")['script']['id']
+        script_name = classic.get_script(name="printer_driver_creation")['script']['name']
+
+        classic.create_policy(
+            """
+            <policy>
+                <general>
+                    <name>printer_driver_creation_trial</name>
+                    <enabled>true</enabled>
+                    <trigger>USER_INITIATED</trigger>
+                    <trigger_checkin>false</trigger_checkin>
+                    <trigger_enrollment_complete>false</trigger_enrollment_complete>
+                    <trigger_login>true</trigger_login>
+                    <trigger_network_state_changed>false</trigger_network_state_changed>
+                    <trigger_startup>false</trigger_startup>
+                    <trigger_other/>
+                    <frequency>Once per computer</frequency>
+                    <retry_event>none</retry_event>
+                    <retry_attempts>-1</retry_attempts>
+                    <notify_on_each_failed_retry>false</notify_on_each_failed_retry>
+                    <location_user_only>false</location_user_only>
+                    <target_drive>/</target_drive>
+                    <offline>false</offline>
+                    <category>
+                        <id>104</id>
+                        <name>Lifestyle 2023-2024</name>
+                    </category>
+                    <date_time_limitations>
+                        <activation_date/>
+                        <activation_date_epoch>0</activation_date_epoch>
+                        <activation_date_utc/>
+                        <expiration_date/>
+                        <expiration_date_epoch>0</expiration_date_epoch>
+                        <expiration_date_utc/>
+                        <no_execute_on/>
+                        <no_execute_start/>
+                        <no_execute_end/>
+                    </date_time_limitations>
+                    <network_limitations>
+                        <minimum_network_connection>No Minimum</minimum_network_connection>
+                        <any_ip_address>true</any_ip_address>
+                        <network_segments/>
+                    </network_limitations>
+                    <override_default_settings>
+                        <target_drive>/</target_drive>
+                        <distribution_point>default</distribution_point>
+                        <force_afp_smb>false</force_afp_smb>
+                        <sus>default</sus>
+                    </override_default_settings>
+                    <network_requirements>Any</network_requirements>
+                    <site>
+                        <id>-1</id>
+                        <name>None</name>
+                    </site>
+                </general>
+                <scope>
+                    <all_computers>false</all_computers>
+                    <computers/>
+                    <computer_groups>
+                        <computer_group>
+                            <id>{0}</id>
+                            <name>{1}</name>
+                        </computer_group>
+                    </computer_groups>
+                    <buildings/>
+                    <departments/>
+                    <limit_to_users>
+                        <user_groups/>
+                    </limit_to_users>
+                    <limitations>
+                        <users/>
+                        <user_groups/>
+                        <network_segments/>
+                        <ibeacons/>
+                    </limitations>
+                    <exclusions>
+                        <computers/>
+                        <computer_groups/>
+                        <buildings/>
+                        <departments/>
+                        <users/>
+                        <user_groups/>
+                        <network_segments/>
+                        <ibeacons/>
+                    </exclusions>
+                </scope>
+                <self_service>
+                    <use_for_self_service>true</use_for_self_service>
+                    <self_service_display_name>Printer Driver for SW Faculty Staff</self_service_display_name>
+                    <install_button_text>Install</install_button_text>
+                    <reinstall_button_text>Reinstall</reinstall_button_text>
+                    <self_service_description/>
+                    <force_users_to_view_description>false</force_users_to_view_description>
+                    <self_service_icon/>
+                    <feature_on_main_page>false</feature_on_main_page>
+                    <self_service_categories>
+                        <category>
+                            <id>94</id>
+                            <name>On-Boarding Staff 2023</name>
+                            <display_in>true</display_in>
+                            <feature_in>false</feature_in>
+                        </category>
+                        <category>
+                            <id>89</id>
+                            <name>Printer driver Equitrac V6</name>
+                            <display_in>true</display_in>
+                            <feature_in>false</feature_in>
+                        </category>
+                    </self_service_categories>
+                    <notification>false</notification>
+                    <notification_type>Self Service</notification_type>
+                    <notification_subject>Trial Version - Fuji Xerox - C4570</notification_subject>
+                    <notification_message/>
+                </self_service>
+                <package_configuration>
+                    <packages>
+                        <size>5</size>
+                        <package>
+                            <id>1066</id>
+                            <name>Booklet and Finisher Driver.dmg</name>
+                            <action>Install</action>
+                            <fut>true</fut>
+                            <feu>true</feu>
+                        </package>
+                        <package>
+                            <id>1068</id>
+                            <name>FF Printer Driver 2022 Sept 19.dmg</name>
+                            <action>Install</action>
+                            <fut>true</fut>
+                            <feu>true</feu>
+                        </package>
+                        <package>
+                            <id>555</id>
+                            <name>Fuji Xerox PS Plug-in Installer.pkg</name>
+                            <action>Install</action>
+                            <fut>false</fut>
+                            <feu>false</feu>
+                        </package>
+                        <package>
+                            <id>1069</id>
+                            <name>FUJIFILM PS Plug-in Installer- Main Driver.pkg</name>
+                            <action>Install</action>
+                            <fut>false</fut>
+                            <feu>false</feu>
+                        </package>
+                        <package>
+                            <id>1070</id>
+                            <name>printerpreset7070.dmg</name>
+                            <action>Install</action>
+                            <fut>true</fut>
+                            <feu>true</feu>
+                        </package>
+                    </packages>
+                    <distribution_point>default</distribution_point>
+                </package_configuration>
+                <scripts>
+                    <size>3</size>
+                    <script>
+                        <id>441</id>
+                        <name>PrinterPreset activate</name>
+                        <priority>After</priority>
+                        <parameter4/>
+                        <parameter5/>
+                        <parameter6/>
+                        <parameter7/>
+                        <parameter8/>
+                        <parameter9/>
+                        <parameter10/>
+                        <parameter11/>
+                    </script>
+                    <script>
+                        <id>361</id>
+                        <name>RemoveHKISPrinters.sh</name>
+                        <priority>Before</priority>
+                        <parameter4/>
+                        <parameter5/>
+                        <parameter6/>
+                        <parameter7/>
+                        <parameter8/>
+                        <parameter9/>
+                        <parameter10/>
+                        <parameter11/>
+                    </script>
+                    <script>
+                        <id>{2}</id>
+                        <name>{3}</name>
+                        <priority>After</priority>
+                        <parameter4/>
+                        <parameter5/>
+                        <parameter6/>
+                        <parameter7/>
+                        <parameter8/>
+                        <parameter9/>
+                        <parameter10/>
+                        <parameter11/>
+                    </script>
+                </scripts>
+                <printers>
+                    <size>0</size>
+                    <leave_existing_default/>
+                </printers>
+                <dock_items>
+                    <size>0</size>
+                </dock_items>
+                <account_maintenance>
+                    <accounts>
+                        <size>0</size>
+                    </accounts>
+                    <directory_bindings>
+                        <size>0</size>
+                    </directory_bindings>
+                    <management_account>
+                        <action>doNotChange</action>
+                    </management_account>
+                    <open_firmware_efi_password>
+                        <of_mode>none</of_mode>
+                        <of_password_sha256/>
+                    </open_firmware_efi_password>
+                </account_maintenance>
+                <reboot>
+                    <message>This computer will restart in 5 minutes. Please save anything you are working on and log out by choosing Log Out from the bottom of the Apple menu.</message>
+                    <startup_disk>Current Startup Disk</startup_disk>
+                    <specify_startup/>
+                    <no_user_logged_in>Do not restart</no_user_logged_in>
+                    <user_logged_in>Do not restart</user_logged_in>
+                    <minutes_until_reboot>5</minutes_until_reboot>
+                    <start_reboot_timer_immediately>false</start_reboot_timer_immediately>
+                    <file_vault_2_reboot>false</file_vault_2_reboot>
+                </reboot>
+                <maintenance>
+                    <recon>true</recon>
+                    <reset_name>false</reset_name>
+                    <install_all_cached_packages>false</install_all_cached_packages>
+                    <heal>false</heal>
+                    <prebindings>false</prebindings>
+                    <permissions>false</permissions>
+                    <byhost>false</byhost>
+                    <system_cache>false</system_cache>
+                    <user_cache>false</user_cache>
+                    <verify>false</verify>
+                </maintenance>
+                <files_processes>
+                    <search_by_path/>
+                    <delete_file>false</delete_file>
+                    <locate_file/>
+                    <update_locate_database>false</update_locate_database>
+                    <spotlight_search/>
+                    <search_for_process/>
+                    <kill_process>false</kill_process>
+                    <run_command/>
+                </files_processes>
+                <user_interaction>
+                    <message_start/>
+                    <allow_users_to_defer>false</allow_users_to_defer>
+                    <allow_deferral_until_utc/>
+                    <allow_deferral_minutes>0</allow_deferral_minutes>
+                    <message_finish/>
+                </user_interaction>
+                <disk_encryption>
+                    <action>none</action>
+                </disk_encryption>
+            </policy>
+            """.format(computer_group_id, computer_group_name, script_id, script_name) , 0
+
+        )
+
+
+
 
         pro.create_managed_software_updates_group_plan(
             {
