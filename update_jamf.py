@@ -218,6 +218,7 @@ def Execute(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
 							""",
 							serialnumber=SerialNumber
 						)
+			time.sleep(2)
 			
 			# f = input("Press Enter to continue...")
 
