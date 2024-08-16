@@ -14,10 +14,12 @@ def main():
     # Get data from excel
     shared.excel_data = getdata.get_data_from_xlsx(xlsx_file_path)
 
-    update_jamf.Execute(JPS_URL, JPS_USERNAME, JPS_PASSWORD)
 
-    # time.sleep(2)
-    # reset_computer.reset(JPS_URL, JPS_USERNAME, JPS_PASSWORD)
+    reset_computer.reset(JPS_URL, JPS_USERNAME, JPS_PASSWORD)
+
+    time.sleep(5)
+
+    update_jamf.Execute(JPS_URL, JPS_USERNAME, JPS_PASSWORD)
 
 
 

@@ -62,7 +62,7 @@ def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
         print("Ignore")
 
     try:
-        classic.delete_policy(name="local_user_account_creation_trial")
+        classic.delete_policy(name="002_local_user_account_creation_trial")
     except Exception as e:
         print(f"Failed to delete policy: {e}")
         print("Ignore")
@@ -336,7 +336,7 @@ def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
         print("Creating a NEW one...")
 
     try:
-        classic.delete_policy(name="local_user_account_creation_trial")
+        classic.delete_policy(name="002_local_user_account_creation_trial")
     except Exception as e:
         print(f"Failed to delete policy: {e}")
         print("Creating a NEW one...")
@@ -566,7 +566,7 @@ def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
         <policy>
             <general>
                 <id/>
-                <name>local_user_account_creation_trial</name>
+                <name>002_local_user_account_creation_trial</name>
                 <enabled>true</enabled>
                 <trigger>EVENT</trigger>
                 <trigger_checkin>false</trigger_checkin>
@@ -805,7 +805,7 @@ def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
         print(f"The following macs failed to add into computer group: {shared.computer_failed_to_add_in_group}")
 
 
-
+        #This is to check login time. Can turn into a function if necessary
         time.sleep(20)
         t_end = time.time() + 10
         current_time = time.time() + 28800
@@ -814,8 +814,8 @@ def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
         while time.time() < t_end:
             for i in stack:
                 computer_time = classic.get_computer_history(serialnumber=i, subsets=["ComputerUsageLogs"])
-                with open("output.txt", "w") as f:
-                    f.write(str(computer_time))
+                # with open("output.txt", "w") as f:
+                #     f.write(str(computer_time))
                 latest_log = computer_time['computer_history']['computer_usage_logs'][0]
                 log_year = latest_log['date_time_utc'][:4]
                 log_month = latest_log['date_time_utc'][5:7]
@@ -858,14 +858,14 @@ def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
             
 
         # f = input("Press ENTER to continue...")
-        print("The stack is empty. Wait for 30 seconds before automatic restarting of devices")
-        time.sleep(30)
+        print("The stack is empty. Wait for 60 seconds before automatic restarting of devices")
+        time.sleep(60)
         for i_index, i_value in enumerate(shared.excel_data):
                 pro.create_mdm_command(
                     {
                     "commandData": {
                         "commandType": "SETTINGS",
-                        "deviceName": f"{name_for_computer_creation_list[i_index]}'s Happiest Mac In THE WORLD",
+                        "deviceName": name_for_computer_creation_list[i_index],
                     },
                     "clientData": [
                         {
@@ -874,7 +874,7 @@ def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
                     ]
                     }
                 )
-                time.sleep(2)
+                time.sleep(5)
                 pro.create_mdm_command(
                     {
                         "commandData": {

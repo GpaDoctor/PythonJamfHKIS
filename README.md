@@ -4,11 +4,16 @@ This is a new project using JAMF Pro incooporating with Python using API to moni
 
 Install the following applications
 Assume installed: Python3, VS Code is recommended. In VS Code install extensions GitHub Desktop, Git Extension Pack
-- pip3 install jps-api-wrapper       jps-api-wrapper       
-- pip3 install lxml                  for xml files
-- pip3 install pandas                for csv files
-- pip3 install openpyxl              for xlsx files
-Install the repo from Github
+
+For jps-api-wrapper 
+- pip3 install jps-api-wrapper 
+For xml files            
+- pip3 install lxml
+For pandas                 
+- pip3 install pandas       
+For xlsx files        
+- pip3 install openpyxl              
+Install the repo from Github with the URL
 
 For mac, type the following in terminal
 setopt HIST_IGNORE_SPACE
@@ -61,6 +66,9 @@ Run the main.py and you are good to go.
         # It is also marked indise the pro.py library e.g.                 
         "Pro.create_macos_managed_software_updates has been deprecated by Jamf "
                 "Pro v10.44.0."
+- A Mac maybe unmanaged on Jamf.
+        use sudo profiles renew -type enrollment        on the corresponding mac in terminal to manage the mac on JAMF.
+
 
 
 
@@ -74,6 +82,7 @@ Run the main.py and you are good to go.
 - https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.10 # This is error message for reference
 - https://www.jamf.com/blog/howto-erase-all-content-and-settings-macos-redeployment/ #reference for erase device
 - https://community.jamf.com/t5/tech-thoughts/how-to-securely-manage-local-admin-passwords-with-jamf-pro-and/ba-p/289969 # for management id
+- https://community.jamf.com/t5/jamf-pro/computer-showing-in-jamf-as-unmanaged/m-p/291741 #for jamf re enrollment
 
 * Return to service articles
 - https://www.youtube.com/watch?v=PyYp0pfxWCw # Youtube Guide
