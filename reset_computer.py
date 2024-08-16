@@ -814,27 +814,30 @@ def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
         while time.time() < t_end:
             for i in stack:
                 computer_time = classic.get_computer_history(serialnumber=i, subsets=["ComputerUsageLogs"])
-                # with open("output.txt", "w") as f:
-                #     f.write(str(computer_time))
-                latest_log = computer_time['computer_history']['computer_usage_logs'][0]
-                log_year = latest_log['date_time_utc'][:4]
-                log_month = latest_log['date_time_utc'][5:7]
-                log_date = latest_log['date_time_utc'][8:10]
-                log_hour = latest_log['date_time_utc'][11:13]
-                log_minute = latest_log['date_time_utc'][14:16]
-                log_second = latest_log['date_time_utc'][17:19]
-                dt = datetime(int(log_year), int(log_month), int(log_date), int(log_hour), int(log_minute), int(log_second))
-                timestamp_utc = calendar.timegm(dt.utctimetuple())
-                print(timestamp_utc)
-                print(current_time)
-                print("\n")
-                if timestamp_utc > current_time:
-                    print(f"{stack} before remove")
-                    stack.remove(i)
-                    print(f"{stack} after remove")
-                if not stack:
-                    flag_1 = True
-                    break
+                if computer_time['computer_history']['computer_usage_logs'] == []:
+                    continue
+                else:
+                    # with open("output.txt", "w") as f:
+                    #     f.write(str(computer_time))
+                    latest_log = computer_time['computer_history']['computer_usage_logs'][0]
+                    log_year = latest_log['date_time_utc'][:4]
+                    log_month = latest_log['date_time_utc'][5:7]
+                    log_date = latest_log['date_time_utc'][8:10]
+                    log_hour = latest_log['date_time_utc'][11:13]
+                    log_minute = latest_log['date_time_utc'][14:16]
+                    log_second = latest_log['date_time_utc'][17:19]
+                    dt = datetime(int(log_year), int(log_month), int(log_date), int(log_hour), int(log_minute), int(log_second))
+                    timestamp_utc = calendar.timegm(dt.utctimetuple())
+                    print(timestamp_utc)
+                    print(current_time)
+                    print("\n")
+                    if timestamp_utc > current_time:
+                        print(f"{stack} before remove")
+                        stack.remove(i)
+                        print(f"{stack} after remove")
+                    if not stack:
+                        flag_1 = True
+                        break
             if flag_1 == True:
                 break
             time.sleep(5)
@@ -874,7 +877,7 @@ def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
                     ]
                     }
                 )
-                time.sleep(5)
+                time.sleep(10)
                 pro.create_mdm_command(
                     {
                         "commandData": {
@@ -885,7 +888,7 @@ def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
                     }                    
                 )
         
-        time.sleep(5)
+        time.sleep(10)
 
         # create a policy for printer driver creation
         script_id = classic.get_script(name="printer_driver_creation")['script']['id']
@@ -1154,7 +1157,7 @@ def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
 
         )
 
-        time.sleep(5)
+        time.sleep(60)
 
 
         pro.create_managed_software_updates_group_plan(
