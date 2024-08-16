@@ -885,7 +885,7 @@ def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
                     }                    
                 )
         
-        time.sleep(1)
+        time.sleep(5)
 
         # create a policy for printer driver creation
         script_id = classic.get_script(name="printer_driver_creation")['script']['id']
@@ -1154,7 +1154,7 @@ def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
 
         )
 
-
+        time.sleep(5)
 
 
         pro.create_managed_software_updates_group_plan(
