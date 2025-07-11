@@ -14,11 +14,12 @@ For pandas
 For xlsx files        
 - pip3 install openpyxl              
 Install the repo from Github with the URL
+- pip3 install keyboard
 
 For mac, type the following in terminal
 setopt HIST_IGNORE_SPACE
-export JPS_USERNAME=yourUsername
-export JPS_PASSWORD=yourPassword
+export JPS_USERNAME=jsham
+export JPS_PASSWORD=Hkis6789
 
 For Windows, type the following in terminal
 set JPS_USERNAME=yourUsername
@@ -29,6 +30,8 @@ Download the .xlsx file from the web. Use pwd in terminal to get the path of the
 Specify the path in main.py.                                    xlsx_file_path = the_path
 Change the endpoint in the pro.py file                          endpoint = "/api/preview/mdm/commands"
 
+All computers have to be within a prestage enrollement in order to run. If not, please add them in the prestage, then erase device manually.
+Beware to skip account creation in account settings. Under Local User Account Type
 
 Run the main.py and you are good to go.
 
@@ -68,6 +71,16 @@ Run the main.py and you are good to go.
                 "Pro v10.44.0."
 - A Mac maybe unmanaged on Jamf.
         use sudo profiles renew -type enrollment        on the corresponding mac in terminal to manage the mac on JAMF.
+- Prestage enrollment
+        # All computers have to be within a prestage enrollment.
+        # RMB to add them into a prestage enrollment, in order for them to be relinked to jamf, the mac have to be manually erased and set up before running the script
+        # Please do NOT add a configuration profile about wifi into the prestage enrollment, "return_to_service", since it maybe bounded to a computer group and not able to delete a computer group.
+        # Inside the account creation remember to skip the account creation where user will not create a local user account.
+- Bootstrap Token checking
+        # Erase All Content and Settings preflight failed: Unable to get Bootstrap Token <(null):0> ((null))
+        sudo profiles status -type bootstraptoken
+        https://developer.apple.com/documentation/security/disabling-and-enabling-system-integrity-protection
+        csrutil enable
 
 
 

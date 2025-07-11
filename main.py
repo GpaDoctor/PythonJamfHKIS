@@ -14,6 +14,7 @@ def main():
     # Get data from excel
     shared.excel_data = getdata.get_data_from_xlsx(xlsx_file_path)
 
+    # testing.test(JPS_URL, JPS_USERNAME, JPS_PASSWORD)
 
     reset_computer.reset(JPS_URL, JPS_USERNAME, JPS_PASSWORD)
 

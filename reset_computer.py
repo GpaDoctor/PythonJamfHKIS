@@ -1,5 +1,11 @@
 from my_module import *
 
+def check_for_exit():
+    """Waits for 'q' key press in a separate thread."""
+    global stop_flag  # Declare as global since we're modifying it
+    input("\nInput q, then press Enter to stop monitoring...\n")  # Blocks until Enter
+    stop_flag = True  # This will update the variable in variables.py
+
 def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
 	# Connect to Jamf        
     with Classic(JPS_URL, JPS_USERNAME,JPS_PASSWORD) as classic:
@@ -12,7 +18,8 @@ def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
             fullname_array = np.array(full_name_list)
             username_list.append(str(i[1]))
             username_array = np.array(username_list)
-            name_for_computer_creation_list.append(str(i[4]) + " LTOP " + str(i[10]))
+            name_for_computer_creation_list.append("MacNB-" + str(i[10]))
+            # name_for_computer_creation_list.append(str(i[4]) + " LTOP " + str(i[10]))
             name_for_computer_creation_array = np.array(name_for_computer_creation_list)
             serialnumber_list.append(str(i[-1]))
             serialnumber_array = np.array(serialnumber_list)
@@ -132,6 +139,67 @@ def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
             }
         )
 
+        # pro.create_script(
+        #     {
+        #         "name": "local_user_account_creation",
+        #         "info": "Create a local user account.",
+        #         "notes": "",
+        #         "priority": "AFTER",
+        #         "categoryId": "1",
+        #         "categoryName": "Developer Tools",
+        #         "parameter4": "1",
+        #         "parameter5": "2",
+        #         "parameter6": "3",
+        #         "parameter7": "4",
+        #         "parameter8": "5",
+        #         "parameter9": "6",
+        #         "parameter10": "7",
+        #         "parameter11": "8",
+        #         "osRequirements": "",
+        #         "scriptContents": 
+        #         """
+        #         #!/bin/bash
+        #         # Define an array of account names, full names, and serial numbers
+        #         account_names=(%s)
+        #         full_names=(%s)
+        #         serial_numbers=(%s)
+
+        #         # Loop through the array and create the user account on each computer
+        #         for (( i=0; i<${#account_names[@]}; i++ )); do
+        #             # Get the serial number of the computer
+        #             actual_serial_number=$(system_profiler SPHardwareDataType | awk '/Serial/ {print $4}')
+                    
+        #             # Check if the serial number of the computer matches the desired serial number
+        #             if [ "$actual_serial_number" == "${serial_numbers[$i]}" ]; then
+        #                 # Set the default password for the user account
+        #                 # Create useracdmin ac, RMB to set prestage enrollment to skip account creation
+        #                 default_password="Hkis1234"
+        #                 useradmin_password="uSer.admin"
+        #                 useradmin_ac="useradmin"
+                        
+        #                 # Create the user account with the specified full name, account name, and default password
+        #                 sysadminctl -addUser "${account_names[$i]}" -fullName "${full_names[$i]}" -password "$default_password"
+                        
+        #                 # Add the user account to the admin group
+        #                 dseditgroup -o edit -a "${account_names[$i]}" -t user admin
+
+                        
+        #                 # Set the default user shell to bash
+        #                 dscl . -create /Users/"${account_names[$i]}" UserShell /bin/bash
+
+
+
+        #                 # Display a message indicating that the account has been created
+        #                 echo "User account created for serial number ${serial_numbers[$i]} with name ${computer_name[$i]}."
+        #             else
+        #                 # Display a message indicating that the script did not run because the serial number did not match
+        #                 echo "This script is not intended to run on this computer."
+        #             fi
+        #             done
+        #         """ %(username_array, fullname_array, serialnumber_array)                                 
+        #         }
+        #     )
+
         pro.create_script(
             {
                 "name": "local_user_account_creation",
@@ -164,10 +232,12 @@ def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
                     
                     # Check if the serial number of the computer matches the desired serial number
                     if [ "$actual_serial_number" == "${serial_numbers[$i]}" ]; then
-                        # Set the default password for the user account
+                        # Set the default passwords
                         default_password="Hkis1234"
+                        useradmin_password="uSer.admin"
+                        useradmin_ac="useradmin"
                         
-                        # Create the user account with the specified full name, account name, and default password
+                        # Create the primary user account
                         sysadminctl -addUser "${account_names[$i]}" -fullName "${full_names[$i]}" -password "$default_password"
                         
                         # Add the user account to the admin group
@@ -176,16 +246,30 @@ def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
                         # Set the default user shell to bash
                         dscl . -create /Users/"${account_names[$i]}" UserShell /bin/bash
                         
+                        # Create the useradmin account if it doesn't exist
+                        if ! id "$useradmin_ac" &>/dev/null; then
+                            sysadminctl -addUser "$useradmin_ac" -fullName "$useradmin_ac" -password "$useradmin_password"
+                            dseditgroup -o edit -a "$useradmin_ac" -t user admin
+                            dscl . -create /Users/"$useradmin_ac" UserShell /bin/bash
+                            
+                            # Optional: Hide the useradmin account from login screen
+                            # defaults write /Library/Preferences/com.apple.loginwindow HiddenUsersList -array-add "$useradmin_ac"
+                            
+                            echo "Useradmin account created."
+                        else
+                            echo "Useradmin account already exists."
+                        fi
+
                         # Display a message indicating that the account has been created
-                        echo "User account created for serial number ${serial_numbers[$i]} with name ${computer_name[$i]}."
+                        echo "User account created for serial number ${serial_numbers[$i]} with name ${account_names[$i]}."
                     else
                         # Display a message indicating that the script did not run because the serial number did not match
                         echo "This script is not intended to run on this computer."
                     fi
-                    done
+                done
                 """ %(username_array, fullname_array, serialnumber_array)                                 
-                }
-            )
+            }
+)
         
         pro.create_script(
             {
@@ -570,8 +654,8 @@ def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
                 <enabled>true</enabled>
                 <trigger>EVENT</trigger>
                 <trigger_checkin>false</trigger_checkin>
-                <trigger_enrollment_complete>false</trigger_enrollment_complete>
-                <trigger_login>true</trigger_login>
+                <trigger_enrollment_complete>true</trigger_enrollment_complete>
+                <trigger_login>false</trigger_login>
                 <trigger_network_state_changed>false</trigger_network_state_changed>
                 <trigger_startup>false</trigger_startup>
                 <trigger_other/>
@@ -787,6 +871,8 @@ def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
                 # the json dict for the parameter can be generated in the jamf classic api link
                 # simply go to the corresponding api, fill in the parameters, in language click on Python copy the dictionary under payload = ...
                 # The management id can be found under the inventory, general, Jamf Pro Management ID: ...
+
+                # the prestage has to be erase manually in order to be registered in Jamf. but ac creation requires ERASE_DEVICE command execution in order to be activated, therefore is necessary
                 pro.create_mdm_command(
                     {
                         "commandData": {
@@ -808,40 +894,120 @@ def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
         #This is to check login time. Can turn into a function if necessary
         time.sleep(20)
         t_end = time.time() + 10
-        current_time = time.time() + 28800
+        # current_time = time.time() + 28800
+        current_time = time.time()
 
-        flag_1 = False
-        while time.time() < t_end:
-            for i in stack:
-                computer_time = classic.get_computer_history(serialnumber=i, subsets=["ComputerUsageLogs"])
-                if computer_time['computer_history']['computer_usage_logs'] == []:
-                    continue
-                else:
-                    # with open("output.txt", "w") as f:
-                    #     f.write(str(computer_time))
-                    latest_log = computer_time['computer_history']['computer_usage_logs'][0]
-                    log_year = latest_log['date_time_utc'][:4]
-                    log_month = latest_log['date_time_utc'][5:7]
-                    log_date = latest_log['date_time_utc'][8:10]
-                    log_hour = latest_log['date_time_utc'][11:13]
-                    log_minute = latest_log['date_time_utc'][14:16]
-                    log_second = latest_log['date_time_utc'][17:19]
-                    dt = datetime(int(log_year), int(log_month), int(log_date), int(log_hour), int(log_minute), int(log_second))
-                    timestamp_utc = calendar.timegm(dt.utctimetuple())
-                    print(timestamp_utc)
+# Have overtime error, if sth still in stack, will overtime and not run
+        # flag_1 = False
+        # while time.time() < t_end:
+        #     for i in stack:
+        #         computer_time = classic.get_computer_history(serialnumber=i, subsets=["ComputerUsageLogs"])
+        #         if computer_time['computer_history']['computer_usage_logs'] == []:
+        #             continue
+        #         else:
+        #             # with open("output.txt", "w") as f:
+        #             #     f.write(str(computer_time))
+        #             latest_log = computer_time['computer_history']['computer_usage_logs'][0]
+        #             log_year = latest_log['date_time_utc'][:4]
+        #             log_month = latest_log['date_time_utc'][5:7]
+        #             log_date = latest_log['date_time_utc'][8:10]
+        #             log_hour = latest_log['date_time_utc'][11:13]
+        #             log_minute = latest_log['date_time_utc'][14:16]
+        #             log_second = latest_log['date_time_utc'][17:19]
+        #             dt = datetime(int(log_year), int(log_month), int(log_date), int(log_hour), int(log_minute), int(log_second))
+        #             timestamp_utc = calendar.timegm(dt.utctimetuple())
+        #             print(timestamp_utc)
+        #             print(current_time)
+        #             print("\n")
+        #             if timestamp_utc > current_time:
+        #                 print(f"{stack} before remove")
+        #                 stack.remove(i)
+        #                 print(f"{stack} after remove")
+        #             if not stack:
+        #                 flag_1 = True
+        #                 break
+        #     if flag_1 == True:
+        #         break
+        #     time.sleep(5)
+        #     t_end = time.time() + 10
+
+
+        # Start the input thread
+        input_thread = threading.Thread(target=check_for_exit)
+        input_thread.daemon = True
+        input_thread.start()
+
+
+        # NEW fixed overtime issue
+        # If cannot be detected, logout the computer and login again
+        # while stack and not stop_flag:  # Use the imported flag
+        #     for i in stack.copy():  # Use .copy() to avoid modifying while iterating
+
+
+
+
+        #         computer_time = classic.get_computer_history(serialnumber=i, subsets=["ComputerUsageLogs"])
+        #         if computer_time['computer_history']['computer_usage_logs'] == []:
+        #             continue
+                
+        #         latest_log = computer_time['computer_history']['computer_usage_logs'][0]
+
+        #         log_year = latest_log['date_time_utc'][:4]
+        #         log_month = latest_log['date_time_utc'][5:7]
+        #         log_date = latest_log['date_time_utc'][8:10]
+        #         log_hour = latest_log['date_time_utc'][11:13]
+        #         log_minute = latest_log['date_time_utc'][14:16]
+        #         log_second = latest_log['date_time_utc'][17:19]
+        #         dt = datetime(int(log_year), int(log_month), int(log_date), int(log_hour), int(log_minute), int(log_second))
+        #         timestamp_utc = calendar.timegm(dt.utctimetuple())
+                
+        #         print(timestamp_utc)
+        #         print(current_time)
+        #         print("\n")
+                
+        #         if timestamp_utc > current_time:
+        #             print(f"{stack} before remove")
+        #             stack.remove(i)
+        #             print(f"{stack} after remove")
+            
+        #     time.sleep(5)  # Check every 5 seconds
+        # print("Monitoring stopped by user or completed.")
+
+
+        # By using last enrolled time instead of computer usuage log time and added the condition of press "q" for mannual override
+        while stack and not stop_flag:
+            for i in stack.copy():
+                try:
+                    # Get computer ID and enrollment time
+                    computer_info = classic.get_computer(serialnumber=i)
+                    computer_info_id = computer_info["computer"]["general"]["id"]
+
+                    computer_temp = pro.get_computer_inventory(id=str(computer_info_id))  # 
+                    
+                    # Parse enrollment time (ISO format: "2023-11-15T14:30:00.000Z")
+                    last_enrolled_str = computer_temp['general']['lastEnrolledDate']
+                    last_enrolled_dt = datetime.strptime(last_enrolled_str, "%Y-%m-%dT%H:%M:%S.%fZ")
+                    last_enrolled_utc = calendar.timegm(last_enrolled_dt.utctimetuple())
+
+                    print(last_enrolled_utc)
                     print(current_time)
                     print("\n")
-                    if timestamp_utc > current_time:
+                    
+                    # Compare with current_time (Unix timestamp)
+                    if last_enrolled_utc > current_time:
                         print(f"{stack} before remove")
+                        print(f"Removing {i} (Enrolled: {last_enrolled_str})")
                         stack.remove(i)
                         print(f"{stack} after remove")
-                    if not stack:
-                        flag_1 = True
-                        break
-            if flag_1 == True:
-                break
-            time.sleep(5)
-            t_end = time.time() + 10
+                
+                except Exception as e:
+                    print(f"Error processing {i}: {e}")
+                    continue
+            
+            time.sleep(5)  # Prevent API rate limiting
+        
+        print("Monitoring stopped by user or completed")
+
 
 
 

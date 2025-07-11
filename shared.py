@@ -13,3 +13,5 @@ error_in_updating = []
 
 # computer failed to add in group
 computer_failed_to_add_in_group = []
+
+stop_flag = False  # Global flag to control the loop

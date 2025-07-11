@@ -5,9 +5,13 @@ from jps_api_wrapper.classic import Classic
 from jps_api_wrapper.pro import Pro
 from pprint import pprint
 from lxml import etree
+
+from shared import stop_flag
 import time
 import calendar
 from datetime import datetime
+import threading
+import calendar
 import json
 import xml
 import requests
@@ -26,5 +30,5 @@ import update_jamf
 import reset_computer
 import user_creation
 import prestage
-
+import testing
 
