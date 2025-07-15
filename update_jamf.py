@@ -94,12 +94,14 @@ def Execute(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
 				UserInformation.append(str(i[j_index]))
 				print(f"{j_value}: {UserInformation[-1]}")
 			full_name = str(UserInformation[2]) + " " + str(UserInformation[3])
-			# name_for_computer = str(UserInformation[4]) + " LTOP " + str(UserInformation[10])
-			name_for_computer = str("MacNB-") + str(UserInformation[10])
+
+			if shared.user_type == "a":
+				print("User Type: Teaching Staff")
+				name_for_computer = str(UserInformation[4]) + " LTOP " + str(UserInformation[10])
+			elif shared.user_type == "b":
+				print("User Type: Student")
+				name_for_computer = str("MacNB-") + str(UserInformation[10])
 			print(name_for_computer)
-
-
-
 			print("\n")
 			time.sleep(1)
 

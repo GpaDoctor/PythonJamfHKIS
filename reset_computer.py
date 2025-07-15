@@ -18,8 +18,20 @@ def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
             fullname_array = np.array(full_name_list)
             username_list.append(str(i[1]))
             username_array = np.array(username_list)
-            name_for_computer_creation_list.append("MacNB-" + str(i[10]))
-            # name_for_computer_creation_list.append(str(i[4]) + " LTOP " + str(i[10]))
+
+            if shared.user_type == 'a':
+                # For teaching staff
+                username_array_printer = username_array.copy()
+                username_array_printer = str(username_array_printer).strip("[]")
+                name_for_computer_creation_list.append(str(i[4]) + " LTOP " + str(i[10]))
+            elif shared.user_type == 'b':
+                # For students
+
+                # Strip the 1st character from each element
+                username_array_printer = np.char.lstrip(username_array, chars=username_array[0][0])  # Strips first char
+                username_array_printer = str(username_array_printer).strip("[]")
+                name_for_computer_creation_list.append("MacNB-" + str(i[10]))
+
             name_for_computer_creation_array = np.array(name_for_computer_creation_list)
             serialnumber_list.append(str(i[-1]))
             serialnumber_array = np.array(serialnumber_list)
@@ -29,8 +41,9 @@ def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
         serialnumber_array = str(serialnumber_array).strip("[]")
 
         print(name_for_computer_creation_list)
+        print(username_array)
+        print(username_array_printer)
 
-  
 
     # x = classic.get_policy(name="somehow", data_type="xml")
     # with open("output.txt", "w") as f:
@@ -354,7 +367,7 @@ def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
                         echo "INFO: Serial number does not match for ${{account_names[$i]}}"
                     fi
                     done
-                """.format(username_array,serialnumber_array)
+                """.format(username_array_printer,serialnumber_array)
             }
         )
 

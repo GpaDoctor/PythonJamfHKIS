@@ -15,3 +15,5 @@ error_in_updating = []
 computer_failed_to_add_in_group = []
 
 stop_flag = False  # Global flag to control the loop
+
+user_type = "a"  # Global identifier for differtiating teachers or students 
