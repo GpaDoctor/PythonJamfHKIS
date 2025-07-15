@@ -28,7 +28,7 @@ def main():
 
     # prestage.pre_enroll(JPS_URL, JPS_USERNAME, JPS_PASSWORD)
 
-    print("Script execution completed.")
+    print("\nScript execution completed.\n")
 
 
     

@@ -4,7 +4,7 @@ def check_for_exit():
     """Waits for 'q' key press in a separate thread."""
     global stop_flag  # Declare as global since we're modifying it
     input("\nInput q, then press Enter to stop monitoring...\n")  # Blocks until Enter
-    stop_flag = True  # This will update the variable in variables.py
+    stop_flag = True  # This will update the variable in shared.py
 
 def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
 	# Connect to Jamf        
@@ -28,7 +28,7 @@ def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
                 # For students
 
                 # Strip the 1st character from each element
-                username_array_printer = np.char.lstrip(username_array, chars=username_array[0][0])  # Strips first char
+                username_array_printer = np.array([x[1:] for x in username_array])  # Strips first char
                 username_array_printer = str(username_array_printer).strip("[]")
                 name_for_computer_creation_list.append("MacNB-" + str(i[10]))
 
@@ -43,6 +43,7 @@ def reset(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
         print(name_for_computer_creation_list)
         print(username_array)
         print(username_array_printer)
+        # exit()
 
 
     # x = classic.get_policy(name="somehow", data_type="xml")
