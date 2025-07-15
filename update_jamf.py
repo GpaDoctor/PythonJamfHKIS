@@ -101,6 +101,7 @@ def Execute(JPS_URL, JPS_USERNAME,JPS_PASSWORD):
 			elif shared.user_type == "b":
 				print("User Type: Student")
 				name_for_computer = str("MacNB-") + str(UserInformation[10])
+				UserInformation[1] = UserInformation[1][1:]  # Remove the first character from the username
 			print(name_for_computer)
 			print("\n")
 			time.sleep(1)

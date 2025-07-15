@@ -26,10 +26,9 @@ def main():
     update_jamf.Execute(JPS_URL, JPS_USERNAME, JPS_PASSWORD)
 
 
-
-  
-
     # prestage.pre_enroll(JPS_URL, JPS_USERNAME, JPS_PASSWORD)
+
+    print("Script execution completed.")
 
 
     
