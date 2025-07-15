@@ -4,6 +4,26 @@
 
 
 
+
+# #!/bin/bash
+
+# # Check if Location Services is already enabled
+# if [[ $(/usr/bin/defaults read /var/db/locationd/Library/Preferences/ByHost/com.apple.locationd.plist LocationServicesEnabled) == "1" ]]; then
+#   echo "Location Services already enabled"
+#   exit 0
+# fi
+
+# # Enable Location Services
+# /usr/bin/defaults write /var/db/locationd/Library/Preferences/ByHost/com.apple.locationd.plist LocationServicesEnabled -int 1
+# /bin/launchctl kickstart -k system/com.apple.locationd
+
+# echo "Location Services enabled"
+# exit 0
+
+
+
+
+
 from my_module import *
 
 def test(JPS_URL, JPS_USERNAME, JPS_PASSWORD):
