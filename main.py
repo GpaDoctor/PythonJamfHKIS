@@ -16,7 +16,7 @@ def main():
 
     # testing.test(JPS_URL, JPS_USERNAME, JPS_PASSWORD)
 
-    shared.user_type = input("Enter 'a' for teaching staff or 'b' for students: ").strip().lower()
+    shared.user_type = input("\nEnter 'a' for teaching staff or 'b' for students: ").strip().lower()
 
 
     reset_computer.reset(JPS_URL, JPS_USERNAME, JPS_PASSWORD)
