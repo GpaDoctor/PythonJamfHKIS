@@ -31,6 +31,7 @@ Specify the path in main.py.                                    xlsx_file_path =
 Change the endpoint in the pro.py file                          endpoint = "/api/preview/mdm/commands"
 
 All computers have to be within a prestage enrollement in order to run. If not, please add them in the prestage, then erase device manually.
+In Prestage Enrollment, under General, in Setup Assistant, enable "Auto Advance through Setup Screen" and set the default Language and Region.
 In Prestage Enrollment, Account Settings tab, under Local User Account Type. KEEP local user account creation, do not skip.
 
 Run the main.py, input a or b for teacher or student, and you are good to go.
@@ -75,15 +76,20 @@ Run the main.py, input a or b for teacher or student, and you are good to go.
         # All computers have to be within a prestage enrollment.
         # RMB to add them into a prestage enrollment, in order for them to be relinked to jamf, the mac have to be manually erased and set up before running the script
         # Please do NOT add a configuration profile about wifi into the prestage enrollment, "return_to_service", since it maybe bounded to a computer group and not able to delete a computer group.
-        # Before In Prestage Enrollment, Account Settings tab, under Local User Account Type. You would need to skip account creation.
+        # Before In Prestage Enrollment,  Account Settings tab, under Local User Account Type. You would need to skip account creation.
           But now, since the check time has been updated to check last enrollment date time, after the enrollment, just wait in the local user account creation page.
           Device will automatically restart once all enrollments are done and accounts will be created automatcially after restart.
+- Automatically Advance
+        # In Prestage Enrollment, under General, in Setup Assistant, enable "Auto Advance through Setup Screen" and set the default Language and Region.
+        # On the computer, when auto advance is enable, you must wait 30 secs with the computer connected to the internet, before setup starts. If you touch the computer (keyboard or mouse) during that 30 seconds Auto Advance will cancel itself and you must walk through setup manually. (There is no indication or count down on the screen that the computer is ready to use Auto Advance).
+        https://community.jamf.com/general-discussions-2/mac-student-computer-lab-proper-zerotouch-21060
 - Bootstrap Token checking
         # Erase All Content and Settings preflight failed: Unable to get Bootstrap Token <(null):0> ((null))
         sudo profiles status -type bootstraptoken
         https://developer.apple.com/documentation/security/disabling-and-enabling-system-integrity-protection
         csrutil enable
-
+- Everything about activation lock
+        # https://trainingcatalog.jamf.com/macos-activation-lock-bypass-with-jamf-now/1766263
 
 
 
