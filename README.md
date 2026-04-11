@@ -18,8 +18,8 @@ Install the repo from Github with the URL
 
 For mac, type the following in terminal
 setopt HIST_IGNORE_SPACE
-export JPS_USERNAME=jsham
-export JPS_PASSWORD=Hkis6789
+export JPS_USERNAME=jshams
+export JPS_PASSWORD=Hkis67890
 
 For Windows, type the following in terminal
 set JPS_USERNAME=yourUsername
